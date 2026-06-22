@@ -1,9 +1,14 @@
 {
   "log": {
-    "loglevel": "none"
+    "loglevel": "warning"
   },
   "dns": {
-    "servers": ["8.8.8.8", "1.1.1.1"],
+    "servers": [
+      "8.8.8.8",
+      "1.1.1.1",
+      "https://dns.google/dns-query",
+      "https://cloudflare-dns.com/dns-query"
+    ],
     "queryStrategy": "UseIPv4",
     "disableCache": false,
     "hosts": {
@@ -60,14 +65,14 @@
       },
       "streamSettings": {
         "network": "ws",
-        "wsSettings": {"path": "/rafaeltv"},
+        "wsSettings": {"path": "/rafaeltv", "headers": {"Host": "your-domain.com"}},
         "sockopt": {
           "tcpFastOpen": true,
           "tcpNoDelay": true,
           "tcpKeepAliveInterval": 15
         }
       },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"], "metadataOnly": false}
     },
     {
       "port": 10001,
@@ -79,14 +84,14 @@
       },
       "streamSettings": {
         "network": "httpupgrade",
-        "httpupgradeSettings": {"path": "/rafaeltv-hu"},
+        "httpupgradeSettings": {"path": "/rafaeltv-hu", "host": "your-domain.com"},
         "sockopt": {
           "tcpFastOpen": true,
           "tcpNoDelay": true,
           "tcpKeepAliveInterval": 15
         }
       },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"], "metadataOnly": false}
     },
     {
       "port": 10002,
@@ -98,14 +103,14 @@
       },
       "streamSettings": {
         "network": "xhttp",
-        "xhttpSettings": {"path": "/rafaeltv-xh", "mode": "auto"},
+        "xhttpSettings": {"path": "/rafaeltv-xh", "host": "your-domain.com", "mode": "auto"},
         "sockopt": {
           "tcpFastOpen": true,
           "tcpNoDelay": true,
           "tcpKeepAliveInterval": 15
         }
       },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"], "metadataOnly": false}
     },
     {
       "port": 10003,
@@ -113,18 +118,18 @@
       "protocol": "vmess",
       "tag": "vmess-ws",
       "settings": {
-        "clients": [{"id": "rafaeltv", "alterId": 0}]
+        "clients": [{"id": "rafaeltv", "alterId": 0, "email": "user@local"}]
       },
       "streamSettings": {
         "network": "ws",
-        "wsSettings": {"path": "/vmess-rafaeltv"},
+        "wsSettings": {"path": "/vmess-rafaeltv", "headers": {"Host": "your-domain.com"}},
         "sockopt": {
           "tcpFastOpen": true,
           "tcpNoDelay": true,
           "tcpKeepAliveInterval": 15
         }
       },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"], "metadataOnly": false}
     },
     {
       "port": 10004,
@@ -132,18 +137,18 @@
       "protocol": "vmess",
       "tag": "vmess-hu",
       "settings": {
-        "clients": [{"id": "rafaeltv", "alterId": 0}]
+        "clients": [{"id": "rafaeltv", "alterId": 0, "email": "user@local"}]
       },
       "streamSettings": {
         "network": "httpupgrade",
-        "httpupgradeSettings": {"path": "/vmess-rafaeltv-hu"},
+        "httpupgradeSettings": {"path": "/vmess-rafaeltv-hu", "host": "your-domain.com"},
         "sockopt": {
           "tcpFastOpen": true,
           "tcpNoDelay": true,
           "tcpKeepAliveInterval": 15
         }
       },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"], "metadataOnly": false}
     },
     {
       "port": 10005,
@@ -151,18 +156,18 @@
       "protocol": "vmess",
       "tag": "vmess-xh",
       "settings": {
-        "clients": [{"id": "rafaeltv", "alterId": 0}]
+        "clients": [{"id": "rafaeltv", "alterId": 0, "email": "user@local"}]
       },
       "streamSettings": {
         "network": "xhttp",
-        "xhttpSettings": {"path": "/vmess-rafaeltv-xh", "mode": "auto"},
+        "xhttpSettings": {"path": "/vmess-rafaeltv-xh", "host": "your-domain.com", "mode": "auto"},
         "sockopt": {
           "tcpFastOpen": true,
           "tcpNoDelay": true,
           "tcpKeepAliveInterval": 15
         }
       },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"], "metadataOnly": false}
     },
     {
       "port": 10006,
@@ -170,19 +175,19 @@
       "protocol": "vless",
       "tag": "vless-ws",
       "settings": {
-        "clients": [{"id": "rafaeltv"}],
+        "clients": [{"id": "rafaeltv", "email": "user@local"}],
         "decryption": "none"
       },
       "streamSettings": {
         "network": "ws",
-        "wsSettings": {"path": "/vless-rafaeltv"},
+        "wsSettings": {"path": "/vless-rafaeltv", "headers": {"Host": "your-domain.com"}},
         "sockopt": {
           "tcpFastOpen": true,
           "tcpNoDelay": true,
           "tcpKeepAliveInterval": 15
         }
       },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"], "metadataOnly": false}
     },
     {
       "port": 10007,
@@ -190,19 +195,17 @@
       "protocol": "vless",
       "tag": "vless-hu",
       "settings": {
-        "clients": [{"id": "rafaeltv"}],
+        "clients": [{"id": "rafaeltv", "email": "user@local"}],
         "decryption": "none"
       },
       "streamSettings": {
         "network": "httpupgrade",
-        "httpupgradeSettings": {"path": "/vless-rafaeltv-hu"},
+        "httpupgradeSettings": {"path": "/vless-rafaeltv-hu", "host": "your-domain.com"},
         "sockopt": {
-          "tcpFastOpen": true,
-          "tcpNoDelay": true,
-          "tcpKeepAliveInterval": 15
+          "tcpFastOpen": true, "tcpNoDelay": true, "tcpKeepAliveInterval": 15
         }
       },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"], "metadataOnly": false}
     },
     {
       "port": 10008,
@@ -210,19 +213,19 @@
       "protocol": "vless",
       "tag": "vless-xh",
       "settings": {
-        "clients": [{"id": "rafaeltv"}],
+        "clients": [{"id": "rafaeltv", "email": "user@local"}],
         "decryption": "none"
       },
       "streamSettings": {
         "network": "xhttp",
-        "xhttpSettings": {"path": "/vless-rafaeltv-xh", "mode": "auto"},
+        "xhttpSettings": {"path": "/vless-rafaeltv-xh", "host": "your-domain.com", "mode": "auto"},
         "sockopt": {
           "tcpFastOpen": true,
           "tcpNoDelay": true,
           "tcpKeepAliveInterval": 15
         }
       },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"], "metadataOnly": false}
     },
     {
       "port": 10009,
@@ -234,14 +237,14 @@
       },
       "streamSettings": {
         "network": "ws",
-        "wsSettings": {"path": "/ss-rafaeltv"},
+        "wsSettings": {"path": "/ss-rafaeltv", "headers": {"Host": "your-domain.com"}},
         "sockopt": {
           "tcpFastOpen": true,
           "tcpNoDelay": true,
           "tcpKeepAliveInterval": 15
         }
       },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"], "metadataOnly": false}
     },
     {
       "port": 10010,
@@ -253,14 +256,14 @@
       },
       "streamSettings": {
         "network": "httpupgrade",
-        "httpupgradeSettings": {"path": "/ss-rafaeltv-hu"},
+        "httpupgradeSettings": {"path": "/ss-rafaeltv-hu", "host": "your-domain.com"},
         "sockopt": {
           "tcpFastOpen": true,
           "tcpNoDelay": true,
           "tcpKeepAliveInterval": 15
         }
       },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"], "metadataOnly": false}
     },
     {
       "port": 10011,
@@ -272,14 +275,14 @@
       },
       "streamSettings": {
         "network": "xhttp",
-        "xhttpSettings": {"path": "/ss-rafaeltv-xh", "mode": "auto"},
+        "xhttpSettings": {"path": "/ss-rafaeltv-xh", "host": "your-domain.com", "mode": "auto"},
         "sockopt": {
           "tcpFastOpen": true,
           "tcpNoDelay": true,
           "tcpKeepAliveInterval": 15
         }
       },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"], "metadataOnly": false}
     }
   ],
   "outbounds": [
@@ -287,18 +290,15 @@
     {"protocol": "blackhole", "tag": "block"}
   ],
   "routing": {
-    "domainStrategy": "AsIs",
+    "domainStrategy": "IPIfNonMatch",
     "rules": [
-      {
-        "type": "field",
-        "inboundTag": [
-          "trojan-ws", "trojan-hu", "trojan-xh",
-          "vmess-ws", "vmess-hu", "vmess-xh",
-          "vless-ws", "vless-hu", "vless-xh",
-          "ss-ws", "ss-hu", "ss-xh"
-        ],
-        "outboundTag": "direct"
-      }
+      {"type": "field", "domain": ["geosite:category-ads-all"], "outboundTag": "block"},
+      {"type": "field", "inboundTag": [
+        "trojan-ws", "trojan-hu", "trojan-xh",
+        "vmess-ws", "vmess-hu", "vmess-xh",
+        "vless-ws", "vless-hu", "vless-xh",
+        "ss-ws", "ss-hu", "ss-xh"
+      ], "outboundTag": "direct"}
     ]
   }
-      }
+}
