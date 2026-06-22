@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RAFAELTV PANEL - Naruto Shippuden</title>
+    <title>RAFAELTV PANEL - Akatsuki Theme</title>
     <style>
         :root {
-            --bg-main: #120a05;
-            --bg-dark: #1e1008;
-            --surface: #2b160b;
-            --surface-dark: #221207;
-            --border: #5a2e10;
-            --border-bright: #ff8800;
-            --text: #fef3e2;
-            --text-dim: #c9a886;
-            --accent: #ff8800;
-            --glow: #ff9922;
-            --red: #e63946;
-            --yellow: #ffd700;
+            --bg-main: #0b0404;
+            --bg-dark: #1a0606;
+            --surface: #2b0a0a;
+            --surface-dark: #200707;
+            --border: #5c1212;
+            --border-bright: #e62429;
+            --text: #fce8e8;
+            --text-dim: #c99494;
+            --accent: #e62429;
+            --glow: #ff3333;
+            --red: #ff2a33;
+            --yellow: #ffcc00;
             --blue: #4194ff;
             --purple: #9932cc;
             --green: #32e055;
@@ -36,8 +36,8 @@
         }
 
         body {
-            background: linear-gradient(180deg, #0a0603 0%, #180c05 100%);
-            background-image: url('https://images.unsplash.com/photo-1612487528505-4d03c0955438?auto=format&fit=crop&w=1920&q=80');
+            background: linear-gradient(180deg, #050202 0%, #120404 100%);
+            background-image: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=1920&q=80');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -61,7 +61,7 @@
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(10, 6, 3, 0.82);
+            background: rgba(5, 2, 2, 0.88);
             z-index: -1;
         }
 
@@ -80,13 +80,13 @@
         }
 
         @keyframes textGlow {
-            0%, 100% { text-shadow: 0 0 10px var(--glow), 0 0 20px rgba(255, 136, 0, 0.6); }
-            50% { text-shadow: 0 0 5px var(--glow), 0 0 12px rgba(255, 136, 0, 0.35); }
+            0%, 100% { text-shadow: 0 0 12px var(--glow), 0 0 24px rgba(230, 36, 41, 0.7); }
+            50% { text-shadow: 0 0 6px var(--glow), 0 0 14px rgba(230, 36, 41, 0.4); }
         }
 
         @keyframes borderGlow {
-            0%, 100% { box-shadow: 0 0 8px rgba(255, 136, 0, 0.4), inset 0 0 2px rgba(255, 136, 0, 0.15); }
-            50% { box-shadow: 0 0 15px rgba(255, 136, 0, 0.6), inset 0 0 4px rgba(255, 136, 0, 0.25); }
+            0%, 100% { box-shadow: 0 0 8px rgba(230, 36, 41, 0.45), inset 0 0 2px rgba(230, 36, 41, 0.18); }
+            50% { box-shadow: 0 0 18px rgba(230, 36, 41, 0.7), inset 0 0 5px rgba(230, 36, 41, 0.3); }
         }
 
         .fade-in { animation: fadeInUp 0.6s ease-out forwards; }
@@ -102,7 +102,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: rgba(10, 6, 3, 0.96);
+            background: rgba(5, 2, 2, 0.97);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             z-index: 9999;
@@ -143,7 +143,7 @@
             animation: fadeInUp 0.8s ease 0.5s forwards;
         }
 
-        /* --- BAGONG STYLING NG MGA BOX --- */
+        /* --- BOX STYLING --- */
         .section {
             background: linear-gradient(145deg, var(--surface-dark), var(--surface));
             border: 1.5px solid var(--border);
@@ -156,7 +156,7 @@
 
         .section:hover {
             border-color: var(--border-bright);
-            box-shadow: 0 0 20px rgba(255, 136, 0, 0.45), inset 0 0 3px rgba(255, 136, 0, 0.2);
+            box-shadow: 0 0 24px rgba(230, 36, 41, 0.55), inset 0 0 4px rgba(230, 36, 41, 0.25);
         }
 
         .section-title {
@@ -205,13 +205,13 @@
 
         .btn:hover {
             border-color: var(--accent);
-            background: rgba(255, 136, 0, 0.12);
+            background: rgba(230, 36, 41, 0.15);
         }
 
         .btn.active {
             border-color: var(--accent);
-            background: rgba(255, 136, 0, 0.2);
-            box-shadow: 0 0 12px rgba(255, 136, 0, 0.35);
+            background: rgba(230, 36, 41, 0.25);
+            box-shadow: 0 0 14px rgba(230, 36, 41, 0.4);
             font-weight: 600;
             color: #ffffff;
         }
@@ -275,7 +275,7 @@
 
         .graph-bar {
             flex: 1;
-            background: linear-gradient(to top, var(--accent), #ff4400);
+            background: linear-gradient(to top, var(--accent), #ff6666);
             border-radius: 4px;
             transition: height 0.12s ease;
             min-height: 3px;
@@ -322,7 +322,7 @@
 
         .copy-btn:hover {
             border-color: var(--accent);
-            background: rgba(255, 136, 0, 0.2);
+            background: rgba(230, 36, 41, 0.25);
         }
 
         .status-dot {
@@ -337,7 +337,7 @@
         .status-dot.yellow { background: var(--yellow); box-shadow: 0 0 8px var(--yellow); animation: pulse 1.2s infinite; }
         @keyframes pulse { 0%,100% {opacity:1;} 50% {opacity:0.5;} }
 
-        .divider { border: none; border-top: 1px solid rgba(90, 46, 16, 0.8); margin: 16px 0; }
+        .divider { border: none; border-top: 1px solid rgba(92, 18, 18, 0.8); margin: 16px 0; }
         .info-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; font-size: var(--font-size-sm); }
         .info-label { color: var(--text-dim); }
         .info-value { color: var(--accent); font-weight: 600; font-size: 15px; }
@@ -355,13 +355,13 @@
             overflow-y: auto;
             width: calc(100% - 32px);
             max-width: 688px;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.6);
             backdrop-filter: blur(15px);
         }
         .dropdown-content.show { display: block; }
         .dropdown-item { padding: 12px 18px; cursor: pointer; font-size: var(--font-size-sm); color: var(--text); transition: background 0.2s; }
-        .dropdown-item:hover { background: rgba(255, 136, 0, 0.18); }
-        .dropdown-item.selected { color: var(--accent); font-weight: bold; background: rgba(255, 136, 0, 0.12); }
+        .dropdown-item:hover { background: rgba(230, 36, 41, 0.2); }
+        .dropdown-item.selected { color: var(--accent); font-weight: bold; background: rgba(230, 36, 41, 0.15); }
 
         .log-container {
             background: var(--surface-dark);
@@ -375,42 +375,22 @@
             margin-top: 16px;
         }
         .log-entry { padding: 4px 0; font-family: var(--font-mono); }
-        .log-entry .time { color: #b89470; margin-right: 8px; }
-
-        .server-config-section {
-            margin-top: 24px;
-            border-top: 1px dashed var(--border);
-            padding-top: 20px;
-        }
-        .server-config-display {
-            background: #121b15;
-            border: 1px solid var(--green);
-            border-radius: 12px;
-            padding: 16px;
-            font-family: var(--font-mono);
-            font-size: 11px;
-            line-height: 1.6;
-            color: #98fb98;
-            max-height: 360px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            word-break: break-all;
-        }
+        .log-entry .time { color: #b87070; margin-right: 8px; }
     </style>
 </head>
 <body>
 
 <div id="loading-screen">
     <div class="loading-digits" id="loading-digits">
-        <span id="d4">★</span><span id="d0">N</span><span id="d4b">★</span>
+        <span id="d4">☁</span><span id="d0">A</span><span id="d4b">☁</span>
     </div>
-    <div class="loading-subtitle" id="loading-subtitle">INITIALIZING SHINOBI PORTAL</div>
+    <div class="loading-subtitle" id="loading-subtitle">AKATSUKI PORTAL • INITIALIZING</div>
 </div>
 
 <div class="container" id="main-content" style="display:none;">
     <div class="section fade-in">
         <div class="section-title glow-text" style="font-size:var(--font-size-xl); letter-spacing:4px; color:var(--accent);">RAFAELTV PANEL</div>
-        <div class="section-subtitle">NARUTO SHIPPUDEN • LIBRENG INTERNET</div>
+        <div class="section-subtitle">AKATSUKI EDITION • LIBRENG INTERNET</div>
         <hr class="divider">
         <div class="info-row"><span class="info-label">HOST:</span><span class="info-value" id="info-host">---</span></div>
         <div class="info-row"><span class="info-label">PASS / UUID:</span><span class="info-value">rafaeltv</span></div>
@@ -459,7 +439,7 @@
         </div>
         <div class="graph-container" id="graph-container"></div>
         <div class="log-container" id="log-container">
-            <div class="log-entry"><span class="time">--:--:--</span> Shinobi network initialized successfully.</div>
+            <div class="log-entry"><span class="time">--:--:--</span> Akatsuki network connected successfully.</div>
         </div>
     </div>
 
@@ -476,381 +456,6 @@
             <button class="copy-btn" id="copy-btn">COPY</button>
             <div class="config-display" id="config-display">---</div>
         </div>
-
-        <div class="server-config-section">
-            <div class="section-title" style="font-size:var(--font-size-sm);color:var(--green);margin-bottom:12px;">📄 XRAY SERVER CONFIG</div>
-            <div class="server-config-display" id="server-config">
-{
-  "log": {
-    "loglevel": "warning"
-  },
-  "dns": {
-    "servers": ["8.8.8.8", "1.1.1.1"],
-    "queryStrategy": "UseIPv4",
-    "disableCache": false,
-    "hosts": {
-      "pagead2.googlesyndication.com": "127.0.0.1",
-      "googlesyndication.com": "127.0.0.1",
-      "doubleclick.net": "127.0.0.1",
-      "googleadservices.com": "127.0.0.1",
-      "adservice.google.com": "127.0.0.1",
-      "adsbygoogle.com": "127.0.0.1",
-      "google-analytics.com": "127.0.0.1",
-      "googletagmanager.com": "127.0.0.1",
-      "googletagservices.com": "127.0.0.1",
-      "googleads.g.doubleclick.net": "127.0.0.1",
-      "securepubads.g.doubleclick.net": "127.0.0.1",
-      "tpc.googlesyndication.com": "127.0.0.1",
-      "afs.googlesyndication.com": "127.0.0.1",
-      "stats.g.doubleclick.net": "127.0.0.1",
-      "ad.doubleclick.net": "127.0.0.1",
-      "partner.googleadservices.com": "127.0.0.1",
-      "pagead2.googleadservices.com": "127.0.0.1",
-      "youtube.com": "127.0.0.1",
-      "ytimg.com": "127.0.0.1",
-      "googlevideo.com": "127.0.0.1",
-      "youtube-nocookie.com": "127.0.0.1",
-      "yt3.ggpht.com": "127.0.0.1",
-      "i.ytimg.com": "127.0.0.1",
-      "s.ytimg.com": "127.0.0.1",
-      "popads.net": "127.0.0.1",
-      "popcash.net": "127.0.0.1",
-      "propellerads.com": "127.0.0.1",
-      "adcash.com": "127.0.0.1",
-      "exoclick.com": "127.0.0.1",
-      "adsterra.com": "127.0.0.1",
-      "popmyads.com": "127.0.0.1",
-      "adultforce.com": "127.0.0.1",
-      "trafficjunky.com": "127.0.0.1",
-      "clickaine.com": "127.0.0.1",
-      "ad-maven.com": "127.0.0.1",
-      "adpushup.com": "127.0.0.1",
-      "adrecover.com": "127.0.0.1",
-      "blockadblock.com": "127.0.0.1",
-      "admiral.com": "127.0.0.1",
-      "fundingchoices.google.com": "127.0.0.1"
-    }
-  },
-  "inbounds": [
-    {
-      "port": 443,
-      "listen": "0.0.0.0",
-      "protocol": "trojan",
-      "tag": "trojan-ws",
-      "settings": {
-        "clients": [{"password": "rafaeltv"}]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "wsSettings": {"path": "/rafaeltv"},
-        "security": "tls",
-        "tlsSettings": {
-          "serverName": "your-domain.com",
-          "certificates": [{"certFile": "/etc/ssl/cert.pem", "keyFile": "/etc/ssl/key.pem"}]
-        },
-        "sockopt": {
-          "tcpFastOpen": true,
-          "tcpNoDelay": true,
-          "tcpKeepAliveInterval": 15
-        }
-      },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
-    },
-    {
-      "port": 443,
-      "listen": "0.0.0.0",
-      "protocol": "trojan",
-      "tag": "trojan-hu",
-      "settings": {
-        "clients": [{"password": "rafaeltv"}]
-      },
-      "streamSettings": {
-        "network": "httpupgrade",
-        "httpupgradeSettings": {"path": "/rafaeltv-hu"},
-        "security": "tls",
-        "tlsSettings": {
-          "serverName": "your-domain.com",
-          "certificates": [{"certFile": "/etc/ssl/cert.pem", "keyFile": "/etc/ssl/key.pem"}]
-        },
-        "sockopt": {
-          "tcpFastOpen": true,
-          "tcpNoDelay": true,
-          "tcpKeepAliveInterval": 15
-        }
-      },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
-    },
-    {
-      "port": 443,
-      "listen": "0.0.0.0",
-      "protocol": "trojan",
-      "tag": "trojan-xh",
-      "settings": {
-        "clients": [{"password": "rafaeltv"}]
-      },
-      "streamSettings": {
-        "network": "xhttp",
-        "xhttpSettings": {"path": "/rafaeltv-xh", "mode": "auto"},
-        "security": "tls",
-        "tlsSettings": {
-          "serverName": "your-domain.com",
-          "certificates": [{"certFile": "/etc/ssl/cert.pem", "keyFile": "/etc/ssl/key.pem"}]
-        },
-        "sockopt": {
-          "tcpFastOpen": true,
-          "tcpNoDelay": true,
-          "tcpKeepAliveInterval": 15
-        }
-      },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
-    },
-    {
-      "port": 443,
-      "listen": "0.0.0.0",
-      "protocol": "vmess",
-      "tag": "vmess-ws",
-      "settings": {
-        "clients": [{"id": "rafaeltv", "alterId": 0}]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "wsSettings": {"path": "/vmess-rafaeltv"},
-        "security": "tls",
-        "tlsSettings": {
-          "serverName": "your-domain.com",
-          "certificates": [{"certFile": "/etc/ssl/cert.pem", "keyFile": "/etc/ssl/key.pem"}]
-        },
-        "sockopt": {
-          "tcpFastOpen": true,
-          "tcpNoDelay": true,
-          "tcpKeepAliveInterval": 15
-        }
-      },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
-    },
-    {
-      "port": 443,
-      "listen": "0.0.0.0",
-      "protocol": "vmess",
-      "tag": "vmess-hu",
-      "settings": {
-        "clients": [{"id": "rafaeltv", "alterId": 0}]
-      },
-      "streamSettings": {
-        "network": "httpupgrade",
-        "httpupgradeSettings": {"path": "/vmess-rafaeltv-hu"},
-        "security": "tls",
-        "tlsSettings": {
-          "serverName": "your-domain.com",
-          "certificates": [{"certFile": "/etc/ssl/cert.pem", "keyFile": "/etc/ssl/key.pem"}]
-        },
-        "sockopt": {
-          "tcpFastOpen": true,
-          "tcpNoDelay": true,
-          "tcpKeepAliveInterval": 15
-        }
-      },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
-    },
-    {
-      "port": 443,
-      "listen": "0.0.0.0",
-      "protocol": "vmess",
-      "tag": "vmess-xh",
-      "settings": {
-        "clients": [{"id": "rafaeltv", "alterId": 0}]
-      },
-      "streamSettings": {
-        "network": "xhttp",
-        "xhttpSettings": {"path": "/vmess-rafaeltv-xh", "mode": "auto"},
-        "security": "tls",
-        "tlsSettings": {
-          "serverName": "your-domain.com",
-          "certificates": [{"certFile": "/etc/ssl/cert.pem", "keyFile": "/etc/ssl/key.pem"}]
-        },
-        "sockopt": {
-          "tcpFastOpen": true,
-          "tcpNoDelay": true,
-          "tcpKeepAliveInterval": 15
-        }
-      },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
-    },
-    {
-      "port": 443,
-      "listen": "0.0.0.0",
-      "protocol": "vless",
-      "tag": "vless-ws",
-      "settings": {
-        "clients": [{"id": "rafaeltv"}],
-        "decryption": "none"
-      },
-      "streamSettings": {
-        "network": "ws",
-        "wsSettings": {"path": "/vless-rafaeltv"},
-        "security": "tls",
-        "tlsSettings": {
-          "serverName": "your-domain.com",
-          "certificates": [{"certFile": "/etc/ssl/cert.pem", "keyFile": "/etc/ssl/key.pem"}]
-        },
-        "sockopt": {
-          "tcpFastOpen": true,
-          "tcpNoDelay": true,
-          "tcpKeepAliveInterval": 15
-        }
-      },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
-    },
-    {
-      "port": 443,
-      "listen": "0.0.0.0",
-      "protocol": "vless",
-      "tag": "vless-hu",
-      "settings": {
-        "clients": [{"id": "rafaeltv"}],
-        "decryption": "none"
-      },
-      "streamSettings": {
-        "network": "httpupgrade",
-        "httpupgradeSettings": {"path": "/vless-rafaeltv-hu"},
-        "security": "tls",
-        "tlsSettings": {
-          "serverName": "your-domain.com",
-          "certificates": [{"certFile": "/etc/ssl/cert.pem", "keyFile": "/etc/ssl/key.pem"}]
-        },
-        "sockopt": {
-          "tcpFastOpen": true,
-          "tcpNoDelay": true,
-          "tcpKeepAliveInterval": 15
-        }
-      },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
-    },
-    {
-      "port": 443,
-      "listen": "0.0.0.0",
-      "protocol": "vless",
-      "tag": "vless-xh",
-      "settings": {
-        "clients": [{"id": "rafaeltv"}],
-        "decryption": "none"
-      },
-      "streamSettings": {
-        "network": "xhttp",
-        "xhttpSettings": {"path": "/vless-rafaeltv-xh", "mode": "auto"},
-        "security": "tls",
-        "tlsSettings": {
-          "serverName": "your-domain.com",
-          "certificates": [{"certFile": "/etc/ssl/cert.pem", "keyFile": "/etc/ssl/key.pem"}]
-        },
-        "sockopt": {
-          "tcpFastOpen": true,
-          "tcpNoDelay": true,
-          "tcpKeepAliveInterval": 15
-        }
-      },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
-    },
-    {
-      "port": 443,
-      "listen": "0.0.0.0",
-      "protocol": "shadowsocks",
-      "tag": "ss-ws",
-      "settings": {
-        "clients": [{"password": "rafaeltv", "method": "aes-256-gcm"}]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "wsSettings": {"path": "/ss-rafaeltv"},
-        "security": "tls",
-        "tlsSettings": {
-          "serverName": "your-domain.com",
-          "certificates": [{"certFile": "/etc/ssl/cert.pem", "keyFile": "/etc/ssl/key.pem"}]
-        },
-        "sockopt": {
-          "tcpFastOpen": true,
-          "tcpNoDelay": true,
-          "tcpKeepAliveInterval": 15
-        }
-      },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
-    },
-    {
-      "port": 443,
-      "listen": "0.0.0.0",
-      "protocol": "shadowsocks",
-      "tag": "ss-hu",
-      "settings": {
-        "clients": [{"password": "rafaeltv", "method": "aes-256-gcm"}]
-      },
-      "streamSettings": {
-        "network": "httpupgrade",
-        "httpupgradeSettings": {"path": "/ss-rafaeltv-hu"},
-        "security": "tls",
-        "tlsSettings": {
-          "serverName": "your-domain.com",
-          "certificates": [{"certFile": "/etc/ssl/cert.pem", "keyFile": "/etc/ssl/key.pem"}]
-        },
-        "sockopt": {
-          "tcpFastOpen": true,
-          "tcpNoDelay": true,
-          "tcpKeepAliveInterval": 15
-        }
-      },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
-    },
-    {
-      "port": 443,
-      "listen": "0.0.0.0",
-      "protocol": "shadowsocks",
-      "tag": "ss-xh",
-      "settings": {
-        "clients": [{"password": "rafaeltv", "method": "aes-256-gcm"}]
-      },
-      "streamSettings": {
-        "network": "xhttp",
-        "xhttpSettings": {"path": "/ss-rafaeltv-xh", "mode": "auto"},
-        "security": "tls",
-        "tlsSettings": {
-          "serverName": "your-domain.com",
-          "certificates": [{"certFile": "/etc/ssl/cert.pem", "keyFile": "/etc/ssl/key.pem"}]
-        },
-        "sockopt": {
-          "tcpFastOpen": true,
-          "tcpNoDelay": true,
-          "tcpKeepAliveInterval": 15
-        }
-      },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
-    }
-  ],
-  "outbounds": [
-    {"protocol": "freedom", "tag": "direct"},
-    {"protocol": "blackhole", "tag": "block"}
-  ],
-  "routing": {
-    "domainStrategy": "AsIs",
-    "rules": [
-      {
-        "type": "field",
-        "inboundTag": [
-          "trojan-ws", "trojan-hu", "trojan-xh",
-          "vmess-ws", "vmess-hu", "vmess-xh",
-          "vless-ws", "vless-hu", "vless-xh",
-          "ss-ws", "ss-hu", "ss-xh"
-        ],
-        "outboundTag": "direct"
-      },
-      {
-        "type": "field",
-        "domain": ["geosite:category-ads-all"],
-        "outboundTag": "block"
-      }
-    ]
-  }
-}
-            </div>
-        </div>
     </div>
 </div>
 
@@ -859,21 +464,57 @@
     const PASS = 'rafaeltv';
     let currentHost = window.location.hostname || '127.0.0.1';
     
+    // Lahat ng protocol kasama
     const PROTOCOLS = ['vless', 'trojan', 'vmess', 'shadowsocks'];
-    const PROTOCOL_LABELS = { vless: 'VLESS', trojan: 'Trojan', vmess: 'VMess', shadowsocks: 'Shadowsocks' };
+    const PROTOCOL_LABELS = { 
+        vless: 'VLESS', 
+        trojan: 'Trojan', 
+        vmess: 'VMess', 
+        shadowsocks: 'Shadowsocks' 
+    };
     
+    // Lahat ng transport kasama
     const TRANSPORTS = ['ws', 'hu', 'xh'];
-    const TRANSPORT_LABELS = { ws: 'WebSocket', hu: 'HTTP Upgrade', xh: 'XHTTP' };
+    const TRANSPORT_LABELS = { 
+        ws: 'WebSocket', 
+        hu: 'HTTP Upgrade', 
+        xh: 'XHTTP' 
+    };
 
-    const PATHS = { vless: '/vless-rafaeltv', trojan: '/rafaeltv', vmess: '/vmess-rafaeltv', shadowsocks: '/ss-rafaeltv' };
+    const PATHS = { 
+        vless: '/vless-rafaeltv', 
+        trojan: '/rafaeltv', 
+        vmess: '/vmess-rafaeltv', 
+        shadowsocks: '/ss-rafaeltv' 
+    };
 
     let selectedProtocol = 'vless';
     let selectedTransport = 'ws';
     let selectedAddress = currentHost;
     let selectedSNI = currentHost;
 
-    let addressList = [currentHost, 'firebase.googleapis.com', 'google.com', 'firebase-settings.googleapis.com', 'payments.googleapis.com', 'run.googleapis.com' ];
-    let sniList = [currentHost, 'fcmtoken.googleapis.com', 'api.paymaya.com', 'support.maya.ph', 'firebase-settings.crashlytics.com' ];
+    // Mas maraming pagpipilian na Address at SNI
+    let addressList = [
+        currentHost, 
+        'firebase.googleapis.com', 
+        'google.com', 
+        'firebase-settings.googleapis.com', 
+        'payments.googleapis.com', 
+        'run.googleapis.com',
+        'www.gstatic.com',
+        'dl.google.com',
+        'connectivitycheck.gstatic.com'
+    ];
+    let sniList = [
+        currentHost, 
+        'fcmtoken.googleapis.com', 
+        'api.paymaya.com', 
+        'support.maya.ph', 
+        'firebase-settings.crashlytics.com',
+        's.ytimg.com',
+        'fonts.googleapis.com',
+        'ajax.googleapis.com'
+    ];
 
     let speedHistory = [];
     let lastUpdateTime = Date.now();
@@ -931,14 +572,25 @@
         addressDropdownBtn.textContent = selectedAddress + ' ▾';
         sniDropdownBtn.textContent = selectedSNI + ' ▾';
 
-        addressDropdownBtn.addEventListener('click', (e) => { e.stopPropagation(); addressDropdown.classList.toggle('show'); sniDropdown.classList.remove('show'); });
-        sniDropdownBtn.addEventListener('click', (e) => { e.stopPropagation(); sniDropdown.classList.toggle('show'); addressDropdown.classList.remove('show'); });
-        document.addEventListener('click', () => { addressDropdown.classList.remove('show'); sniDropdown.classList.remove('show'); });
+        addressDropdownBtn.addEventListener('click', (e) => { 
+            e.stopPropagation(); 
+            addressDropdown.classList.toggle('show'); 
+            sniDropdown.classList.remove('show'); 
+        });
+        sniDropdownBtn.addEventListener('click', (e) => { 
+            e.stopPropagation(); 
+            sniDropdown.classList.toggle('show'); 
+            addressDropdown.classList.remove('show'); 
+        });
+        document.addEventListener('click', () => { 
+            addressDropdown.classList.remove('show'); 
+            sniDropdown.classList.remove('show'); 
+        });
 
         setTimeout(() => {
             loadingScreen.classList.add('hidden');
             mainContent.style.display = 'flex';
-            addLog('System ready. Interface loaded successfully.');
+            addLog('Akatsuki system ready.');
         }, 1800);
 
         setInterval(simulateSpeedStream, 500);
@@ -1067,19 +719,19 @@
 
     buildButtonBar(protocolBar, PROTOCOLS, selectedProtocol, PROTOCOL_LABELS, (val) => {
         selectedProtocol = val;
-        addLog('Protocol switched to ' + val.toUpperCase());
+        addLog('Protocol set to ' + val.toUpperCase());
     });
 
     buildButtonBar(transportBar, TRANSPORTS, selectedTransport, TRANSPORT_LABELS, (val) => {
         selectedTransport = val;
-        addLog('Transport changed to ' + val.toUpperCase());
+        addLog('Transport set to ' + val.toUpperCase());
     });
 
     copyBtn.addEventListener('click', () => {
         navigator.clipboard.writeText(configDisplay.textContent).then(() => {
             copyBtn.textContent = 'COPIED ✓';
             setTimeout(() => copyBtn.textContent = 'COPY', 2000);
-            addLog('Configuration copied to clipboard.');
+            addLog('Link copied to clipboard.');
         }).catch(() => {
             copyBtn.textContent = 'FAILED!';
             setTimeout(() => copyBtn.textContent = 'COPY', 2000);
@@ -1091,4 +743,4 @@
 </script>
 
 </body>
-  </html>
+</html>
