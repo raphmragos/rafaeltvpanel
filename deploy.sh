@@ -75,11 +75,10 @@ SERVICE_NAME=${INPUT_NAME:-rafaeltv-panel}
 
 echo ""
 echo -e "  ${CYAN}SELECT MODE:${RESET}"
-echo -e "  ${YELLOW}1) AUTO         (1 vCPU / 2Gi  RAM)${RESET}"
+echo -e "  ${YELLOW}1) AUTO         (1 vCPU / 2Gi  RAM) ✅ Recommended for Qwiklab${RESET}"
 echo -e "  ${YELLOW}2) HIGH         (2 vCPU / 4Gi  RAM)${RESET}"
 echo -e "  ${YELLOW}3) STABLE       (4 vCPU / 8Gi  RAM)${RESET}"
-echo -e "  ${YELLOW}4) LIGHT        (0.5 vCPU / 1Gi RAM) ✅ Recommended for Qwiklab${RESET}"
-echo -e "  ${YELLOW}5) CUSTOM       (Your own specs)${RESET}"
+echo -e "  ${YELLOW}4) CUSTOM       (Your own specs)${RESET}"
 echo ""
 read -r -p "$(echo -e "  ${CYAN}CHOICE: ${RESET}")" MODE_CHOICE
 
@@ -87,38 +86,51 @@ case "$MODE_CHOICE" in
     1) CPU="1"; RAM="2Gi"; MODE="AUTO"     ; MAX_INSTANCES="2";;
     2) CPU="2"; RAM="4Gi"; MODE="HIGH"     ; MAX_INSTANCES="2";;
     3) CPU="4"; RAM="8Gi"; MODE="STABLE"   ; MAX_INSTANCES="1";;
-    4) CPU="0.5"; RAM="1Gi"; MODE="LIGHT"  ; MAX_INSTANCES="3";;
-    5)
+    4)
         echo ""
-        read -r -p "$(echo -e "  ${CYAN}CPU (0.5/1/2/4): ${RESET}")" CPU
-        read -r -p "$(echo -e "  ${CYAN}RAM (1Gi/2Gi/4Gi/8Gi): ${RESET}")" RAM
+        read -r -p "$(echo -e "  ${CYAN}CPU (1/2/4): ${RESET}")" CPU
+        read -r -p "$(echo -e "  ${CYAN}RAM (2Gi/4Gi/8Gi): ${RESET}")" RAM
         echo ""
         echo -e "  ${CYAN}MAX INSTANCES:${RESET}"
         read -r -p "$(echo -e "  ${CYAN}1/2/3: ${RESET}")" MAX_INSTANCES
         MODE="CUSTOM"
         ;;
-    *) CPU="0.5"; RAM="1Gi"; MODE="LIGHT"; MAX_INSTANCES="2";;
+    *) CPU="1"; RAM="2Gi"; MODE="DEFAULT"; MAX_INSTANCES="2";;
 esac
 
 echo ""
 loading "CHECKING & PREPARING BUILD FILES"
 
-# ✅ DAGDAG: Gumawa ng simpleng Dockerfile at index.html kung wala
+# ✅ DAGDAG: Gumawa ng tamang Dockerfile na may Xray at Nginx
 if [ ! -f Dockerfile ]; then
 cat > Dockerfile <<EOF
-FROM debian:bookworm-slim
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt update && apt install -y --no-install-recommends nginx ca-certificates && rm -rf /var/lib/apt/lists/*
+FROM openresty/openresty:alpine
+RUN apk add --no-cache ca-certificates wget unzip tini
+
+RUN wget -qO /tmp/xray.zip https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip && \
+    unzip /tmp/xray.zip -d /tmp/xray/ && \
+    mv /tmp/xray/xray /usr/local/bin/ && \
+    mkdir -p /usr/local/share/xray/ && \
+    mv /tmp/xray/geoip.dat /usr/local/share/xray/ && \
+    mv /tmp/xray/geosite.dat /usr/local/share/xray/ && \
+    chmod +x /usr/local/bin/xray && \
+    rm -rf /tmp/xray /tmp/xray.zip
+
+COPY config.json /etc/xray.json
+COPY nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
 COPY index.html /usr/local/openresty/nginx/html/index.html
-COPY nginx.conf /etc/nginx/nginx.conf
+
+ENV XRAY_LOCATION_ASSET=/usr/local/share/xray/
+
 EXPOSE 8080
-CMD ["nginx", "-g", "daemon off;"]
+
+ENTRYPOINT ["/sbin/tini", "--"]
+CMD sh -c "/usr/local/bin/xray run -c /etc/xray.json & exec /usr/local/openresty/bin/openresty -g 'daemon off;'"
 EOF
 fi
 
 if [ ! -f index.html ]; then
     echo -e "  ${YELLOW}⚠️ No index.html found. Using default panel...${RESET}"
-    # Dito pwede ilagay ang panel code natin kanina
     cat > index.html <<EOF
 <!DOCTYPE html>
 <html lang="en">
