@@ -37,10 +37,6 @@
 
         body {
             background: linear-gradient(180deg, #050202 0%, #120404 100%);
-            background-image: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
             color: var(--text);
             font-family: var(--font-sans);
             font-size: var(--font-size-base);
@@ -185,11 +181,11 @@
             background: var(--surface-dark);
             border: 1.5px solid var(--border);
             color: var(--text);
-            padding: 14px 20px; /* ✅ Pinalaki ang padding para mas malaki */
+            padding: 14px 20px;
             border-radius: 6px;
             cursor: pointer;
             font-family: var(--font-sans);
-            font-size: calc(var(--font-size-base) + 1px); /* ✅ Medyo pinalaki ang font */
+            font-size: calc(var(--font-size-base) + 1px);
             font-weight: 500;
             transition: all 0.25s ease;
             width: 100%;
@@ -197,7 +193,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            min-height: 54px; /* ✅ Nagdagdag ng minimum na taas */
+            min-height: 54px;
         }
 
         .btn:hover {
@@ -346,9 +342,9 @@
             background: var(--surface-dark);
             border: 1.5px solid var(--border-bright);
             border-radius: 6px;
-            padding: 10px 0; /* ✅ Dinagdagan ang padding */
+            padding: 10px 0;
             z-index: 10000;
-            max-height: 320px; /* ✅ Pinalaki ang taas para mas marami makita */
+            max-height: 320px;
             overflow-y: auto;
             width: calc(100% - 32px);
             max-width: 688px;
@@ -357,9 +353,9 @@
         }
         .dropdown-content.show { display: block; }
         .dropdown-item { 
-            padding: 16px 20px; /* ✅ Pinalaki ang espasyo sa bawat item */
+            padding: 16px 20px;
             cursor: pointer; 
-            font-size: var(--font-size-base); /* ✅ Pinalaki ang font */
+            font-size: var(--font-size-base);
             color: var(--text); 
             transition: background 0.2s; 
             line-height: 1.5;
@@ -397,7 +393,8 @@
         <div class="section-subtitle">AKATSUKI EDITION • LIBRENG INTERNET</div>
         <hr class="divider">
         <div class="info-row"><span class="info-label">HOST:</span><span class="info-value" id="info-host">---</span></div>
-        <div class="info-row"><span class="info-label">PASS / UUID:</span><span class="info-value">rafaeltv</span></div>
+        <div class="info-row"><span class="info-label">VMess UUID:</span><span class="info-value">b831381d-6324-4d53-ad4f-8cda48b30811</span></div>
+        <div class="info-row"><span class="info-label">VLESS/Trojan/SS Pass:</span><span class="info-value">rafaeltv</span></div>
         <div class="info-row"><span class="info-label">UPTIME:</span><span class="info-value" id="runtime-display">00:00:00</span></div>
     </div>
 
@@ -465,6 +462,7 @@
 
 <script>
 (function() {
+    const VMESS_UUID = 'b831381d-6324-4d53-ad4f-8cda48b30811';
     const PASS = 'rafaeltv';
     let currentHost = window.location.hostname || '127.0.0.1';
     
@@ -666,8 +664,12 @@
         const sni = selectedSNI;
         const host = currentHost;
         const path = getPath();
-        const netType = (selectedTransport === 'xh') ? 'xhttp' : (selectedTransport === 'hu' ? 'httpupgrade' : 'ws');
-        const transportParam = (selectedTransport === 'ws') ? 'type=ws&path=' : 'type=http&path=';
+        const netType = selectedTransport === 'ws' ? 'ws' : selectedTransport === 'hu' ? 'httpupgrade' : 'xhttp';
+        
+        let transportParam;
+        if (selectedTransport === 'ws') transportParam = 'type=ws&path=';
+        else if (selectedTransport === 'hu') transportParam = 'type=httpupgrade&path=';
+        else transportParam = 'type=xhttp&path=';
 
         switch (selectedProtocol) {
             case 'vless':
@@ -680,7 +682,7 @@
                     ps: 'VMESS-' + selectedTransport.toUpperCase() + '-' + host,
                     add: addr,
                     port: '443',
-                    id: PASS,
+                    id: VMESS_UUID,
                     aid: '0',
                     scy: 'auto',
                     net: netType,
