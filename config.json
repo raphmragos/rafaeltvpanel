@@ -56,7 +56,7 @@
   },
   "inbounds": [
     {
-      "port": 10000,
+      "port": 443,
       "listen": "0.0.0.0",
       "protocol": "trojan",
       "tag": "trojan-ws",
@@ -65,7 +65,16 @@
       },
       "streamSettings": {
         "network": "ws",
-        "wsSettings": {"path": "/rafaeltv", "headers": {"Host": "ILAGAY-DITO-ANG-DOMAIN-MO.COM"}},
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/etc/ssl/cert.pem",
+              "keyFile": "/etc/ssl/key.pem"
+            }
+          ]
+        },
+        "wsSettings": {"path": "/rafaeltv", "headers": {"Host": "ILAGAY-DOMAIN-MO-DITO.COM"}},
         "sockopt": {
           "tcpFastOpen": true,
           "tcpNoDelay": true,
@@ -84,7 +93,16 @@
       },
       "streamSettings": {
         "network": "httpupgrade",
-        "httpupgradeSettings": {"path": "/rafaeltv-hu", "host": "ILAGAY-DITO-ANG-DOMAIN-MO.COM"},
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/etc/ssl/cert.pem",
+              "keyFile": "/etc/ssl/key.pem"
+            }
+          ]
+        },
+        "httpupgradeSettings": {"path": "/rafaeltv-hu", "host": "ILAGAY-DOMAIN-MO-DITO.COM"},
         "sockopt": {
           "tcpFastOpen": true,
           "tcpNoDelay": true,
@@ -103,7 +121,16 @@
       },
       "streamSettings": {
         "network": "xhttp",
-        "xhttpSettings": {"path": "/rafaeltv-xh", "host": "ILAGAY-DITO-ANG-DOMAIN-MO.COM", "mode": "auto"},
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/etc/ssl/cert.pem",
+              "keyFile": "/etc/ssl/key.pem"
+            }
+          ]
+        },
+        "xhttpSettings": {"path": "/rafaeltv-xh", "host": "ILAGAY-DOMAIN-MO-DITO.COM", "mode": "auto"},
         "sockopt": {
           "tcpFastOpen": true,
           "tcpNoDelay": true,
@@ -122,7 +149,16 @@
       },
       "streamSettings": {
         "network": "ws",
-        "wsSettings": {"path": "/vmess-rafaeltv", "headers": {"Host": "ILAGAY-DITO-ANG-DOMAIN-MO.COM"}},
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/etc/ssl/cert.pem",
+              "keyFile": "/etc/ssl/key.pem"
+            }
+          ]
+        },
+        "wsSettings": {"path": "/vmess-rafaeltv", "headers": {"Host": "ILAGAY-DOMAIN-MO-DITO.COM"}},
         "sockopt": {
           "tcpFastOpen": true,
           "tcpNoDelay": true,
@@ -141,7 +177,16 @@
       },
       "streamSettings": {
         "network": "httpupgrade",
-        "httpupgradeSettings": {"path": "/vmess-rafaeltv-hu", "host": "ILAGAY-DITO-ANG-DOMAIN-MO.COM"},
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/etc/ssl/cert.pem",
+              "keyFile": "/etc/ssl/key.pem"
+            }
+          ]
+        },
+        "httpupgradeSettings": {"path": "/vmess-rafaeltv-hu", "host": "ILAGAY-DOMAIN-MO-DITO.COM"},
         "sockopt": {
           "tcpFastOpen": true,
           "tcpNoDelay": true,
@@ -160,7 +205,16 @@
       },
       "streamSettings": {
         "network": "xhttp",
-        "xhttpSettings": {"path": "/vmess-rafaeltv-xh", "host": "ILAGAY-DITO-ANG-DOMAIN-MO.COM", "mode": "auto"},
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/etc/ssl/cert.pem",
+              "keyFile": "/etc/ssl/key.pem"
+            }
+          ]
+        },
+        "xhttpSettings": {"path": "/vmess-rafaeltv-xh", "host": "ILAGAY-DOMAIN-MO-DITO.COM", "mode": "auto"},
         "sockopt": {
           "tcpFastOpen": true,
           "tcpNoDelay": true,
@@ -180,7 +234,16 @@
       },
       "streamSettings": {
         "network": "ws",
-        "wsSettings": {"path": "/vless-rafaeltv", "headers": {"Host": "ILAGAY-DITO-ANG-DOMAIN-MO.COM"}},
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/etc/ssl/cert.pem",
+              "keyFile": "/etc/ssl/key.pem"
+            }
+          ]
+        },
+        "wsSettings": {"path": "/vless-rafaeltv", "headers": {"Host": "ILAGAY-DOMAIN-MO-DITO.COM"}},
         "sockopt": {
           "tcpFastOpen": true,
           "tcpNoDelay": true,
@@ -200,9 +263,20 @@
       },
       "streamSettings": {
         "network": "httpupgrade",
-        "httpupgradeSettings": {"path": "/vless-rafaeltv-hu", "host": "ILAGAY-DITO-ANG-DOMAIN-MO.COM"},
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/etc/ssl/cert.pem",
+              "keyFile": "/etc/ssl/key.pem"
+            }
+          ]
+        },
+        "httpupgradeSettings": {"path": "/vless-rafaeltv-hu", "host": "ILAGAY-DOMAIN-MO-DITO.COM"},
         "sockopt": {
-          "tcpFastOpen": true, "tcpNoDelay": true, "tcpKeepAliveInterval": 15
+          "tcpFastOpen": true,
+          "tcpNoDelay": true,
+          "tcpKeepAliveInterval": 15
         }
       },
       "sniffing": {"enabled": true, "destOverride": ["http", "tls"], "metadataOnly": false}
@@ -218,7 +292,16 @@
       },
       "streamSettings": {
         "network": "xhttp",
-        "xhttpSettings": {"path": "/vless-rafaeltv-xh", "host": "ILAGAY-DITO-ANG-DOMAIN-MO.COM", "mode": "auto"},
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/etc/ssl/cert.pem",
+              "keyFile": "/etc/ssl/key.pem"
+            }
+          ]
+        },
+        "xhttpSettings": {"path": "/vless-rafaeltv-xh", "host": "ILAGAY-DOMAIN-MO-DITO.COM", "mode": "auto"},
         "sockopt": {
           "tcpFastOpen": true,
           "tcpNoDelay": true,
@@ -237,7 +320,16 @@
       },
       "streamSettings": {
         "network": "ws",
-        "wsSettings": {"path": "/ss-rafaeltv", "headers": {"Host": "ILAGAY-DITO-ANG-DOMAIN-MO.COM"}},
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/etc/ssl/cert.pem",
+              "keyFile": "/etc/ssl/key.pem"
+            }
+          ]
+        },
+        "wsSettings": {"path": "/ss-rafaeltv", "headers": {"Host": "ILAGAY-DOMAIN-MO-DITO.COM"}},
         "sockopt": {
           "tcpFastOpen": true,
           "tcpNoDelay": true,
@@ -256,7 +348,16 @@
       },
       "streamSettings": {
         "network": "httpupgrade",
-        "httpupgradeSettings": {"path": "/ss-rafaeltv-hu", "host": "ILAGAY-DITO-ANG-DOMAIN-MO.COM"},
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/etc/ssl/cert.pem",
+              "keyFile": "/etc/ssl/key.pem"
+            }
+          ]
+        },
+        "httpupgradeSettings": {"path": "/ss-rafaeltv-hu", "host": "ILAGAY-DOMAIN-MO-DITO.COM"},
         "sockopt": {
           "tcpFastOpen": true,
           "tcpNoDelay": true,
@@ -275,7 +376,16 @@
       },
       "streamSettings": {
         "network": "xhttp",
-        "xhttpSettings": {"path": "/ss-rafaeltv-xh", "host": "ILAGAY-DITO-ANG-DOMAIN-MO.COM", "mode": "auto"},
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/etc/ssl/cert.pem",
+              "keyFile": "/etc/ssl/key.pem"
+            }
+          ]
+        },
+        "xhttpSettings": {"path": "/ss-rafaeltv-xh", "host": "ILAGAY-DOMAIN-MO-DITO.COM", "mode": "auto"},
         "sockopt": {
           "tcpFastOpen": true,
           "tcpNoDelay": true,
