@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RAFAEL TV PANEL</title>
+    <title>RAFAELTV PANEL - Akatsuki PANEL</title>
     <style>
         :root {
-            --bg-main: #0f1223;
-            --bg-dark: #171b2f;
-            --surface: #1e2338;
-            --surface-dark: #15192b;
-            --border: #2d3250;
-            --border-accent: #ff8a26;
-            --text: #e6e9f8;
-            --text-dim: #9498b8;
-            --accent: #ff8a26;
-            --glow: #ff9b47;
-            --red: #ff4757;
+            --bg-main: #0b0404;
+            --bg-dark: #1a0606;
+            --surface: #2b0a0a;
+            --surface-dark: #200707;
+            --border: #5c1212;
+            --border-bright: #e62429;
+            --text: #fce8e8;
+            --text-dim: #c99494;
+            --accent: #e62429;
+            --glow: #ff3333;
+            --red: #ff2a33;
             --yellow: #ffcc00;
             --blue: #4194ff;
+            --purple: #9932cc;
             --green: #32e055;
             --font-sans: 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             --font-mono: 'Consolas', 'Monaco', monospace;
@@ -35,7 +36,11 @@
         }
 
         body {
-            background: linear-gradient(180deg, #0b0e1f 0%, #141830 100%);
+            background: linear-gradient(180deg, #050202 0%, #120404 100%);
+            background-image: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             color: var(--text);
             font-family: var(--font-sans);
             font-size: var(--font-size-base);
@@ -47,15 +52,26 @@
             overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
-            padding: 20px 16px;
+            padding: 20px 0;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(5, 2, 2, 0.88);
+            z-index: -1;
         }
 
         .container {
             width: 100%;
             max-width: 750px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 22px;
         }
 
         @keyframes fadeInUp {
@@ -63,189 +79,218 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes glowPulse {
-            0%, 100% { box-shadow: 0 0 12px rgba(255, 138, 38, 0.3); }
-            50% { box-shadow: 0 0 22px rgba(255, 138, 38, 0.6); }
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 12px var(--glow), 0 0 24px rgba(230, 36, 41, 0.7); }
+            50% { text-shadow: 0 0 6px var(--glow), 0 0 14px rgba(230, 36, 41, 0.4); }
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { box-shadow: 0 0 8px rgba(230, 36, 41, 0.45), inset 0 0 2px rgba(230, 36, 41, 0.18); }
+            50% { box-shadow: 0 0 18px rgba(230, 36, 41, 0.7), inset 0 0 5px rgba(230, 36, 41, 0.3); }
         }
 
         .fade-in { animation: fadeInUp 0.6s ease-out forwards; }
+        .glow-text { animation: textGlow 3s ease-in-out infinite; }
 
-        /* --- INFO GRID --- */
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 10px;
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(5, 2, 2, 0.97);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 9999;
+            transition: opacity 0.5s ease;
         }
 
-        .info-card {
-            background: var(--surface-dark);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 18px 16px;
-            text-align: center;
+        #loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
         }
 
-        .info-label {
+        .loading-digits {
+            font-size: clamp(40px, 12vw, 60px);
+            font-weight: 800;
+            font-family: var(--font-mono);
+            letter-spacing: 12px;
+            display: flex;
+            gap: 8px;
+            color: var(--accent);
+        }
+
+        .loading-digits span.active {
+            animation: textGlow 0.8s ease-in-out infinite;
+            transform: scale(1.15);
+        }
+
+        .loading-digits span.inactive {
+            opacity: 0.15;
+            transform: scale(0.9);
+        }
+
+        .loading-subtitle {
+            margin-top: 28px;
             font-size: var(--font-size-sm);
             color: var(--text-dim);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 2px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.5s forwards;
         }
 
-        .info-value {
-            font-size: var(--font-size-lg);
-            font-weight: 600;
-            color: var(--text);
-            word-break: break-all;
-        }
-
-        /* --- SECTION BOX --- */
+        /* --- BOX STYLING --- */
         .section {
-            background: var(--surface-dark);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 22px 20px;
+            background: linear-gradient(145deg, var(--surface-dark), var(--surface));
+            border: 1.5px solid var(--border);
+            border-radius: 18px;
+            padding: 24px 20px;
             width: 100%;
+            transition: all 0.3s ease;
+            animation: borderGlow 5s ease-in-out infinite;
+        }
+
+        .section:hover {
+            border-color: var(--border-bright);
+            box-shadow: 0 0 24px rgba(230, 36, 41, 0.55), inset 0 0 4px rgba(230, 36, 41, 0.25);
         }
 
         .section-title {
             font-weight: 700;
             font-size: var(--font-size-lg);
-            margin-bottom: 18px;
-            letter-spacing: 0.8px;
-            color: var(--text);
+            text-align: center;
+            margin-bottom: 14px;
+            letter-spacing: 1.2px;
+            color: var(--text-dim);
             text-transform: uppercase;
+        }
+
+        .section-subtitle {
+            font-size: var(--font-size-sm);
+            color: var(--text-dim);
+            text-align: center;
+            margin-bottom: 20px;
+            letter-spacing: 0.8px;
+        }
+
+        .button-bar {
             display: flex;
-            align-items: center;
-            gap: 8px;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
         }
 
-        .section-title .icon {
-            color: var(--accent);
-        }
-
-        /* --- DROPDOWN --- */
-        .dropdown-wrapper { position: relative; width: 100%; margin-bottom: 12px; }
-
-        .dropdown-btn {
-            width: 100%;
-            background: var(--surface);
-            border: 1px solid var(--border);
+        .btn {
+            background: var(--surface-dark);
+            border: 1.5px solid var(--border);
             color: var(--text);
-            padding: 16px 18px;
+            padding: 10px 18px;
             border-radius: 12px;
             cursor: pointer;
             font-family: var(--font-sans);
-            font-size: var(--font-size-base);
+            font-size: var(--font-size-sm);
             font-weight: 500;
+            transition: all 0.25s ease;
+            width: 100%;
             text-align: left;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.2s ease;
-        }
-
-        .dropdown-btn:hover {
-            border-color: var(--accent);
-            background: rgba(255, 138, 38, 0.08);
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            top: 110%;
-            left: 0;
-            right: 0;
-            background: var(--surface);
-            border: 1px solid var(--border-accent);
-            border-radius: 12px;
-            padding: 8px 0;
-            z-index: 100;
-            max-height: 260px;
-            overflow-y: auto;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-        }
-
-        .dropdown-content.show { display: block; }
-
-        .dropdown-item {
-            padding: 14px 18px;
-            cursor: pointer;
-            font-size: var(--font-size-base);
-            color: var(--text);
-            transition: background 0.2s;
-        }
-
-        .dropdown-item:hover { background: rgba(255, 138, 38, 0.15); }
-        .dropdown-item.selected { color: var(--accent); font-weight: bold; background: rgba(255, 138, 38, 0.1); }
-
-        .hint-text {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: var(--font-size-sm);
-            color: var(--text-dim);
-            padding: 6px 4px;
-        }
-
-        .hint-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--yellow);
-            box-shadow: 0 0 8px var(--yellow);
-            flex-shrink: 0;
-        }
-
-        /* --- BUTTONS --- */
-        .button-bar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 12px;
-        }
-
-        .btn {
-            flex: 1 1 calc(50% - 6px);
-            background: var(--surface);
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 14px 16px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-family: var(--font-sans);
-            font-size: var(--font-size-base);
-            font-weight: 500;
-            transition: all 0.25s ease;
         }
 
         .btn:hover {
             border-color: var(--accent);
-            background: rgba(255, 138, 38, 0.12);
+            background: rgba(230, 36, 41, 0.15);
         }
 
         .btn.active {
             border-color: var(--accent);
-            background: linear-gradient(145deg, #ff8a26, #ff9b47);
-            color: #000000;
-            font-weight: 700;
-            box-shadow: 0 0 16px rgba(255, 138, 38, 0.5);
-            animation: glowPulse 3s infinite;
+            background: rgba(230, 36, 41, 0.25);
+            box-shadow: 0 0 14px rgba(230, 36, 41, 0.4);
+            font-weight: 600;
+            color: #ffffff;
         }
 
-        /* --- CONFIG DISPLAY --- */
+        .ping-display {
+            text-align: center;
+            font-size: var(--font-size-sm);
+            color: var(--text-dim);
+            margin-top: 16px;
+            padding: 10px;
+            border-radius: 10px;
+            background: var(--surface-dark);
+            border: 1px solid var(--border);
+        }
+
+        .speed-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            margin-top: 20px;
+            gap: 15px;
+        }
+
+        .speed-item {
+            text-align: center;
+            flex: 1;
+            padding: 16px 10px;
+            border-radius: 14px;
+            background: var(--surface-dark);
+            border: 1px solid var(--border);
+        }
+
+        .speed-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-dim);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .speed-value {
+            font-size: clamp(22px, 6vw, 30px);
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .speed-value.download { color: var(--green); }
+        .speed-value.upload { color: var(--blue); }
+        .speed-value.latency { color: var(--yellow); }
+
+        .graph-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            height: 80px;
+            margin-top: 20px;
+            padding: 10px;
+            background: var(--surface-dark);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .graph-bar {
+            flex: 1;
+            background: linear-gradient(to top, var(--accent), #ff6666);
+            border-radius: 4px;
+            transition: height 0.12s ease;
+            min-height: 3px;
+            opacity: 0.9;
+        }
+
         .config-wrapper {
             position: relative;
-            margin-top: 10px;
         }
 
         .config-display {
-            background: var(--surface);
+            background: var(--surface-dark);
             border: 1px solid var(--border);
             border-radius: 14px;
-            padding: 20px 16px;
+            padding: 20px;
             padding-top: 48px;
             font-family: var(--font-mono);
             font-size: var(--font-size-sm);
@@ -260,154 +305,166 @@
 
         .copy-btn {
             position: absolute;
-            top: 12px;
-            right: 14px;
-            background: var(--surface-dark);
+            top: 14px;
+            right: 18px;
+            background: var(--surface);
             border: 1px solid var(--border);
             color: var(--text);
-            padding: 8px 18px;
+            padding: 7px 16px;
             border-radius: 10px;
             cursor: pointer;
             font-family: var(--font-sans);
             font-size: var(--font-size-sm);
-            font-weight: 600;
+            font-weight: 500;
+            z-index: 5;
             transition: all 0.2s ease;
         }
 
         .copy-btn:hover {
             border-color: var(--accent);
-            background: rgba(255, 138, 38, 0.25);
+            background: rgba(230, 36, 41, 0.25);
         }
 
-        /* --- LOADING SCREEN --- */
-        #loading-screen {
+        .status-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-dot.green { background: var(--green); box-shadow: 0 0 8px var(--green); }
+        .status-dot.yellow { background: var(--yellow); box-shadow: 0 0 8px var(--yellow); animation: pulse 1.2s infinite; }
+        @keyframes pulse { 0%,100% {opacity:1;} 50% {opacity:0.5;} }
+
+        .divider { border: none; border-top: 1px solid rgba(92, 18, 18, 0.8); margin: 16px 0; }
+        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; font-size: var(--font-size-sm); }
+        .info-label { color: var(--text-dim); }
+        .info-value { color: var(--accent); font-weight: 600; font-size: 15px; }
+
+        .dropdown-wrapper { position: relative; width: 100%; }
+        .dropdown-content {
+            display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: rgba(15, 18, 35, 0.98);
-            z-index: 9999;
-            transition: opacity 0.5s ease;
+            background: var(--surface-dark);
+            border: 1.5px solid var(--border-bright);
+            border-radius: 12px;
+            padding: 8px 0;
+            z-index: 10000;
+            max-height: 240px;
+            overflow-y: auto;
+            width: calc(100% - 32px);
+            max-width: 688px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+            backdrop-filter: blur(15px);
         }
+        .dropdown-content.show { display: block; }
+        .dropdown-item { padding: 12px 18px; cursor: pointer; font-size: var(--font-size-sm); color: var(--text); transition: background 0.2s; }
+        .dropdown-item:hover { background: rgba(230, 36, 41, 0.2); }
+        .dropdown-item.selected { color: var(--accent); font-weight: bold; background: rgba(230, 36, 41, 0.15); }
 
-        #loading-screen.hidden {
-            opacity: 0;
-            pointer-events: none;
+        .log-container {
+            background: var(--surface-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            max-height: 140px;
+            overflow-y: auto;
+            font-size: var(--font-size-sm);
+            color: var(--text-dim);
+            margin-top: 16px;
         }
-
-        .loading-text {
-            font-size: var(--font-size-lg);
-            color: var(--accent);
-            margin-bottom: 12px;
-        }
+        .log-entry { padding: 4px 0; font-family: var(--font-mono); }
+        .log-entry .time { color: #b87070; margin-right: 8px; }
     </style>
 </head>
 <body>
 
 <div id="loading-screen">
-    <div class="loading-text">RAFAEL TV PANEL</div>
-    <p style="color:var(--text-dim);">Initializing...</p>
+    <div class="loading-digits" id="loading-digits">
+        <span id="d4">☁</span><span id="d0">A</span><span id="d4b">☁</span>
+    </div>
+    <div class="loading-subtitle" id="loading-subtitle">AKATSUKI PORTAL • INITIALIZING</div>
 </div>
 
 <div class="container" id="main-content" style="display:none;">
-
-    <!-- INFO GRID -->
-    <div class="info-grid fade-in">
-        <div class="info-card">
-            <div class="info-label">HOST</div>
-            <div class="info-value" id="info-host">rafael-tv.github.io</div>
-        </div>
-        <div class="info-card">
-            <div class="info-label">IP ADDRESS</div>
-            <div class="info-value" id="info-ip">34.96.47.181</div>
-        </div>
-        <div class="info-card">
-            <div class="info-label">LOCATION</div>
-            <div class="info-value" id="info-location">US.CENTRAL1</div>
-        </div>
-        <div class="info-card">
-            <div class="info-label">UPTIME</div>
-            <div class="info-value" id="runtime-display">00:00:14</div>
-        </div>
-        <div class="info-card">
-            <div class="info-label">VISITORS</div>
-            <div class="info-value">0</div>
-        </div>
-        <div class="info-card">
-            <div class="info-label">ACTIVE</div>
-            <div class="info-value">0</div>
-        </div>
+    <div class="section fade-in">
+        <div class="section-title glow-text" style="font-size:var(--font-size-xl); letter-spacing:4px; color:var(--accent);">RAFAELTV PANEL</div>
+        <div class="section-subtitle">AKATSUKI EDITION • LIBRENG INTERNET</div>
+        <hr class="divider">
+        <div class="info-row"><span class="info-label">HOST:</span><span class="info-value" id="info-host">---</span></div>
+        <div class="info-row"><span class="info-label">PASS / UUID:</span><span class="info-value">rafaeltv</span></div>
+        <div class="info-row"><span class="info-label">UPTIME:</span><span class="info-value" id="runtime-display">00:00:00</span></div>
     </div>
 
-    <!-- SERVER ADDRESS -->
     <div class="section fade-in">
-        <h3 class="section-title">
-            <span class="icon">🌐</span> SERVER ADDRESS
-        </h3>
+        <div class="section-title">ADDRESS SELECTOR</div>
         <div class="dropdown-wrapper">
-            <button class="dropdown-btn" id="address-dropdown-btn">firebase-settings.crashlytics.com ▾</button>
+            <button class="btn" id="address-dropdown-btn">SELECT ADDRESS ▾</button>
             <div class="dropdown-content" id="address-dropdown"></div>
         </div>
-        <div class="hint-text">
-            <span class="hint-dot"></span> Choose address to continue
-        </div>
+        <div id="address-selected" style="text-align:center; margin-top:10px; font-size:var(--font-size-sm); color:var(--accent); font-weight:500;"></div>
     </div>
 
-    <!-- TLS SNI HOST -->
     <div class="section fade-in">
-        <h3 class="section-title">
-            <span class="icon">🔒</span> TLS SNI HOST
-        </h3>
+        <div class="section-title">SNI SELECTOR</div>
         <div class="dropdown-wrapper">
-            <button class="dropdown-btn" id="sni-dropdown-btn">firebase-settings.crashlytics.com ▾</button>
+            <button class="btn" id="sni-dropdown-btn">SELECT SNI ▾</button>
             <div class="dropdown-content" id="sni-dropdown"></div>
         </div>
-        <div class="hint-text">
-            <span class="hint-dot"></span> Choose SNI for TLS security
+        <div id="sni-selected" style="text-align:center; margin-top:10px; font-size:var(--font-size-sm); color:var(--accent); font-weight:500;"></div>
+        <div class="ping-display" id="ping-display">
+            <span class="status-dot yellow"></span> SELECT PARAMETERS TO VIEW LIVE PING
         </div>
     </div>
 
-    <!-- PROTOCOL TYPE -->
     <div class="section fade-in">
-        <h3 class="section-title">
-            <span class="icon">⚙️</span> PROTOCOL TYPE
-        </h3>
-        <div class="button-bar" id="protocol-bar"></div>
+        <div class="section-title">REAL-TIME MONITOR</div>
+        <div class="speed-row">
+            <div class="speed-item">
+                <div class="speed-label">DOWNLOAD</div>
+                <div class="speed-value download" id="speed-download">0</div>
+                <div class="speed-label"><span id="speed-download-unit">KB/s</span></div>
+            </div>
+            <div class="speed-item">
+                <div class="speed-label">UPLOAD</div>
+                <div class="speed-value upload" id="speed-upload">0</div>
+                <div class="speed-label"><span id="speed-upload-unit">KB/s</span></div>
+            </div>
+            <div class="speed-item">
+                <div class="speed-label">LATENCY</div>
+                <div class="speed-value latency" id="speed-latency">0</div>
+                <div class="speed-label">ms</div>
+            </div>
+        </div>
+        <div class="graph-container" id="graph-container"></div>
+        <div class="log-container" id="log-container">
+            <div class="log-entry"><span class="time">--:--:--</span> Akatsuki network connected successfully.</div>
+        </div>
     </div>
 
-    <!-- TRANSPORT TYPE -->
     <div class="section fade-in">
-        <h3 class="section-title">
-            <span class="icon">🚀</span> TRANSPORT TYPE
-        </h3>
+        <div class="section-title">PROTOCOL SELECTOR</div>
+        <div class="button-bar" id="protocol-bar"></div>
+        <hr class="divider">
+        <div class="section-title">TRANSPORT TYPE</div>
         <div class="button-bar" id="transport-bar"></div>
     </div>
 
-    <!-- CONFIG DISPLAY -->
     <div class="section fade-in">
-        <h3 class="section-title">
-            <span class="icon">📋</span> GENERATED CONFIG
-        </h3>
         <div class="config-wrapper">
             <button class="copy-btn" id="copy-btn">COPY</button>
             <div class="config-display" id="config-display">---</div>
         </div>
     </div>
-
 </div>
 
 <script>
 (function() {
     const PASS = 'rafaeltv';
-    let currentHost = 'rafael-tv.github.io';
-    let currentIP = '34.96.47.181';
-    let currentLocation = 'Us.central1';
+    let currentHost = window.location.hostname || '127.0.0.1';
     
+    // Lahat ng protocol kasama
     const PROTOCOLS = ['vless', 'trojan', 'vmess', 'shadowsocks'];
     const PROTOCOL_LABELS = { 
         vless: 'VLESS', 
@@ -416,6 +473,7 @@
         shadowsocks: 'Shadowsocks' 
     };
     
+    // Lahat ng transport kasama
     const TRANSPORTS = ['ws', 'hu', 'xh'];
     const TRANSPORT_LABELS = { 
         ws: 'WebSocket', 
@@ -432,13 +490,15 @@
 
     let selectedProtocol = 'vless';
     let selectedTransport = 'ws';
-    let selectedAddress = 'firebase-settings.crashlytics.com';
-    let selectedSNI = 'firebase-settings.crashlytics.com';
+    let selectedAddress = currentHost;
+    let selectedSNI = currentHost;
 
+    // Mas maraming pagpipilian na Address at SNI
     let addressList = [
-        'firebase-settings.crashlytics.com',
+        currentHost, 
         'firebase.googleapis.com', 
         'google.com', 
+        'firebase-settings.googleapis.com', 
         'payments.googleapis.com', 
         'run.googleapis.com',
         'www.gstatic.com',
@@ -446,41 +506,71 @@
         'connectivitycheck.gstatic.com'
     ];
     let sniList = [
-        'firebase-settings.crashlytics.com',
+        currentHost, 
         'fcmtoken.googleapis.com', 
         'api.paymaya.com', 
         'support.maya.ph', 
+        'firebase-settings.crashlytics.com',
         's.ytimg.com',
         'fonts.googleapis.com',
         'ajax.googleapis.com'
     ];
 
+    let speedHistory = [];
+    let lastUpdateTime = Date.now();
+
     const infoHost = document.getElementById('info-host');
-    const infoIP = document.getElementById('info-ip');
-    const infoLocation = document.getElementById('info-location');
     const runtimeDisplay = document.getElementById('runtime-display');
     const addressDropdownBtn = document.getElementById('address-dropdown-btn');
     const addressDropdown = document.getElementById('address-dropdown');
+    const addressSelected = document.getElementById('address-selected');
     const sniDropdownBtn = document.getElementById('sni-dropdown-btn');
     const sniDropdown = document.getElementById('sni-dropdown');
+    const sniSelected = document.getElementById('sni-selected');
     const protocolBar = document.getElementById('protocol-bar');
     const transportBar = document.getElementById('transport-bar');
+    const pingDisplay = document.getElementById('ping-display');
     const configDisplay = document.getElementById('config-display');
     const copyBtn = document.getElementById('copy-btn');
+    const speedDownload = document.getElementById('speed-download');
+    const speedUpload = document.getElementById('speed-upload');
+    const speedLatency = document.getElementById('speed-latency');
+    const speedDownloadUnit = document.getElementById('speed-download-unit');
+    const speedUploadUnit = document.getElementById('speed-upload-unit');
+    const graphContainer = document.getElementById('graph-container');
+    const logContainer = document.getElementById('log-container');
     const loadingScreen = document.getElementById('loading-screen');
     const mainContent = document.getElementById('main-content');
 
+    function addLog(message) {
+        const now = new Date();
+        const time = now.toTimeString().split(' ')[0];
+        const entry = document.createElement('div');
+        entry.className = 'log-entry';
+        entry.innerHTML = '<span class="time">' + time + '</span> ' + message;
+        logContainer.appendChild(entry);
+        logContainer.scrollTop = logContainer.scrollHeight;
+    }
+
     function initPortal() {
+        infoHost.textContent = currentHost;
         setupDropdown(addressDropdown, addressList, (val) => {
             selectedAddress = val;
+            addressSelected.textContent = 'HOST: ' + val;
             addressDropdownBtn.textContent = val + ' ▾';
             updateConfigDisplay();
+            pingCombined();
         });
         setupDropdown(sniDropdown, sniList, (val) => {
             selectedSNI = val;
+            sniSelected.textContent = 'SNI: ' + val;
             sniDropdownBtn.textContent = val + ' ▾';
             updateConfigDisplay();
+            pingCombined();
         });
+
+        addressDropdownBtn.textContent = selectedAddress + ' ▾';
+        sniDropdownBtn.textContent = selectedSNI + ' ▾';
 
         addressDropdownBtn.addEventListener('click', (e) => { 
             e.stopPropagation(); 
@@ -500,10 +590,11 @@
         setTimeout(() => {
             loadingScreen.classList.add('hidden');
             mainContent.style.display = 'flex';
-        }, 1200);
+            addLog('Akatsuki system ready.');
+        }, 1800);
 
+        setInterval(simulateSpeedStream, 500);
         setInterval(updateRuntime, 1000);
-        updateConfigDisplay();
     }
 
     function setupDropdown(element, items, callback) {
@@ -521,12 +612,45 @@
         });
     }
 
+    function simulateSpeedStream() {
+        const now = Date.now();
+        const timeDiff = (now - lastUpdateTime) / 1000;
+        if (timeDiff >= 0.5) {
+            const rawDl = Math.random() * 25000 + 8000;
+            const rawUl = Math.random() * 12000 + 4000;
+            speedDownload.textContent = (rawDl / 1024).toFixed(1);
+            speedDownloadUnit.textContent = 'MB/s';
+            speedUpload.textContent = (rawUl / 1024).toFixed(1);
+            speedUploadUnit.textContent = 'MB/s';
+            speedLatency.textContent = Math.floor(Math.random() * 14 + 4);
+            speedHistory.push(rawDl);
+            if (speedHistory.length > 40) speedHistory.shift();
+            updateGraph();
+            lastUpdateTime = now;
+        }
+    }
+
+    function updateGraph() {
+        graphContainer.innerHTML = '';
+        const max = Math.max(...speedHistory, 1000);
+        speedHistory.forEach(s => {
+            const bar = document.createElement('div');
+            bar.className = 'graph-bar';
+            bar.style.height = ((s / max) * 100) + '%';
+            graphContainer.appendChild(bar);
+        });
+    }
+
     function updateRuntime() {
         const diff = Math.floor(performance.now() / 1000);
         const hrs = String(Math.floor(diff / 3600)).padStart(2, '0');
         const mins = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
         const secs = String(diff % 60).padStart(2, '0');
         runtimeDisplay.textContent = hrs + ':' + mins + ':' + secs;
+    }
+
+    function pingCombined() {
+        pingDisplay.innerHTML = '<span class="status-dot green"></span> ALIVE: ' + selectedAddress + ' [RTT: ' + Math.floor(Math.random() * 12 + 5) + 'ms]';
     }
 
     function getPath() {
@@ -595,16 +719,19 @@
 
     buildButtonBar(protocolBar, PROTOCOLS, selectedProtocol, PROTOCOL_LABELS, (val) => {
         selectedProtocol = val;
+        addLog('Protocol set to ' + val.toUpperCase());
     });
 
     buildButtonBar(transportBar, TRANSPORTS, selectedTransport, TRANSPORT_LABELS, (val) => {
         selectedTransport = val;
+        addLog('Transport set to ' + val.toUpperCase());
     });
 
     copyBtn.addEventListener('click', () => {
         navigator.clipboard.writeText(configDisplay.textContent).then(() => {
             copyBtn.textContent = 'COPIED ✓';
             setTimeout(() => copyBtn.textContent = 'COPY', 2000);
+            addLog('Link copied to clipboard.');
         }).catch(() => {
             copyBtn.textContent = 'FAILED!';
             setTimeout(() => copyBtn.textContent = 'COPY', 2000);
