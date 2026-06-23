@@ -29,13 +29,6 @@
       "ad.doubleclick.net": "127.0.0.1",
       "partner.googleadservices.com": "127.0.0.1",
       "pagead2.googleadservices.com": "127.0.0.1",
-      "youtube.com": "127.0.0.1",
-      "ytimg.com": "127.0.0.1",
-      "googlevideo.com": "127.0.0.1",
-      "youtube-nocookie.com": "127.0.0.1",
-      "yt3.ggpht.com": "127.0.0.1",
-      "i.ytimg.com": "127.0.0.1",
-      "s.ytimg.com": "127.0.0.1",
       "popads.net": "127.0.0.1",
       "popcash.net": "127.0.0.1",
       "propellerads.com": "127.0.0.1",
@@ -121,7 +114,7 @@
       "protocol": "vmess",
       "tag": "vmess-ws",
       "settings": {
-        "clients": [{"id": "rafaeltv", "alterId": 0, "email": "user@local"}]
+        "clients": [{"id": "b831381d-6324-4d53-ad4f-8cda48b30811", "alterId": 0, "email": "user@local"}]
       },
       "streamSettings": {
         "network": "ws",
@@ -141,7 +134,7 @@
       "protocol": "vmess",
       "tag": "vmess-hu",
       "settings": {
-        "clients": [{"id": "rafaeltv", "alterId": 0, "email": "user@local"}]
+        "clients": [{"id": "b831381d-6324-4d53-ad4f-8cda48b30811", "alterId": 0, "email": "user@local"}]
       },
       "streamSettings": {
         "network": "httpupgrade",
@@ -161,7 +154,7 @@
       "protocol": "vmess",
       "tag": "vmess-xh",
       "settings": {
-        "clients": [{"id": "rafaeltv", "alterId": 0, "email": "user@local"}]
+        "clients": [{"id": "b831381d-6324-4d53-ad4f-8cda48b30811", "alterId": 0, "email": "user@local"}]
       },
       "streamSettings": {
         "network": "xhttp",
