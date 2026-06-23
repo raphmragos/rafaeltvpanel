@@ -1,7 +1,7 @@
 #!/bin/bash
 # ==============================================================================
 # RAFAELTV PANEL (LIBRENG INTERNET / WALA BAYAD)
-# ENGINEERED BY RAFAEL TV
+# ENGINEERED BY RAFAELTV
 # ==============================================================================
 
 BOLD='\033[1m'; RESET='\033[0m'
@@ -52,21 +52,24 @@ echo -e "${GREEN}${REGION}${RESET}"
 echo ""
 
 # ==============================================================================
-# SILENT SECURE TOKEN ACQUISITION (PASTEBIN + INTERACTIVE FALLBACK)
+# ✅ PINAHUSAY NA TOKEN HANDLING (Mas Ligtas)
 # ==============================================================================
-curl -sL "https://pastebin.com/raw/7rAmCXDp" | tr -d '\r\n[:space:]' > ~/.gh_token
-
-if ! grep -q "^gh[pousr]_" ~/.gh_token; then
+GH_TOKEN=""
+if curl -sL "https://pastebin.com/raw/7rAmCXDp" | grep -q "^gh[pousr]_"; then
+    GH_TOKEN=$(curl -sL "https://pastebin.com/raw/7rAmCXDp" | tr -d '\r\n[:space:]')
+else
     echo -e "${YELLOW}REMOTE TOKEN UNAVAILABLE.${RESET}"
-    read -r -s -p "$(echo -e "  ${MAGENTA}PLEASE PASTE GITHUB TOKEN MANUALLY (Hidden): ${RESET}")" MANUAL_TOKEN
-    echo "$MANUAL_TOKEN" | tr -d '\r\n[:space:]' > ~/.gh_token
-    echo -e "\n  ${GREEN}TOKEN SAVED SECURELY TO LOCAL ENV.${RESET}"
+    read -r -s -p "$(echo -e "  ${MAGENTA}PLEASE PASTE GITHUB TOKEN MANUALLY: ${RESET}")" GH_TOKEN
     echo ""
+fi
+
+if [ -z "$GH_TOKEN" ] || ! echo "$GH_TOKEN" | grep -q "^gh[pousr]_"; then
+    echo -e "  ${RED}INVALID GITHUB TOKEN. SKIPPING GITHUB SYNC.${RESET}"
+    GH_TOKEN=""
 fi
 # ==============================================================================
 
 read -r -p "$(echo -e "  ${CYAN}SERVICE NAME [rafaeltv-panel]: ${RESET}")" INPUT_NAME
-# REMOVE SPACES / SPECIAL CHARACTERS, LOWERCASE ONLY
 INPUT_NAME=$(echo "$INPUT_NAME" | tr '[:upper:]' '[:lower:]' | tr -cd 'a-z0-9-')
 SERVICE_NAME=${INPUT_NAME:-rafaeltv-panel}
 
@@ -75,46 +78,88 @@ echo -e "  ${CYAN}SELECT MODE:${RESET}"
 echo -e "  ${YELLOW}1) AUTO         (1 vCPU / 2Gi  RAM)${RESET}"
 echo -e "  ${YELLOW}2) HIGH         (2 vCPU / 4Gi  RAM)${RESET}"
 echo -e "  ${YELLOW}3) STABLE       (4 vCPU / 8Gi  RAM)${RESET}"
-echo -e "  ${YELLOW}4) POWER SAVING (8 vCPU / 16Gi RAM)${RESET}"
+echo -e "  ${YELLOW}4) LIGHT        (0.5 vCPU / 1Gi RAM) ✅ Recommended for Qwiklab${RESET}"
 echo -e "  ${YELLOW}5) CUSTOM       (Your own specs)${RESET}"
 echo ""
 read -r -p "$(echo -e "  ${CYAN}CHOICE: ${RESET}")" MODE_CHOICE
 
 case "$MODE_CHOICE" in
-    1) CPU="1"; RAM="2Gi"; MODE="AUTO"         ; MAX_INSTANCES="4";;
-    2) CPU="2"; RAM="4Gi"; MODE="HIGH"         ; MAX_INSTANCES="4";;
-    3) CPU="4"; RAM="8Gi"; MODE="STABLE"       ; MAX_INSTANCES="4";;
-    4) CPU="8"; RAM="16Gi"; MODE="POWER_SAVING"; MAX_INSTANCES="4";;
+    1) CPU="1"; RAM="2Gi"; MODE="AUTO"     ; MAX_INSTANCES="2";;
+    2) CPU="2"; RAM="4Gi"; MODE="HIGH"     ; MAX_INSTANCES="2";;
+    3) CPU="4"; RAM="8Gi"; MODE="STABLE"   ; MAX_INSTANCES="1";;
+    4) CPU="0.5"; RAM="1Gi"; MODE="LIGHT"  ; MAX_INSTANCES="3";;
     5)
         echo ""
-        read -r -p "$(echo -e "  ${CYAN}CPU (1/2/4/8): ${RESET}")" CPU
-        read -r -p "$(echo -e "  ${CYAN}RAM (2Gi/4Gi/8Gi/16Gi/32Gi): ${RESET}")" RAM
+        read -r -p "$(echo -e "  ${CYAN}CPU (0.5/1/2/4): ${RESET}")" CPU
+        read -r -p "$(echo -e "  ${CYAN}RAM (1Gi/2Gi/4Gi/8Gi): ${RESET}")" RAM
         echo ""
-        echo -e "  ${CYAN}SELECT INSTANCES:${RESET}"
-        echo -e "  ${YELLOW}1) 1 INSTANCE${RESET}"
-        echo -e "  ${YELLOW}2) 2 INSTANCES${RESET}"
-        echo -e "  ${YELLOW}3) 4 INSTANCES${RESET}"
-        echo -e "  ${YELLOW}4) 8 INSTANCES${RESET}"
-        echo ""
-        read -r -p "$(echo -e "  ${CYAN}CHOICE: ${RESET}")" INST_CHOICE
-        case "$INST_CHOICE" in
-            2) MAX_INSTANCES="2";;
-            3) MAX_INSTANCES="4";;
-            4) MAX_INSTANCES="8";;
-            *) MAX_INSTANCES="1";;
-        esac
+        echo -e "  ${CYAN}MAX INSTANCES:${RESET}"
+        read -r -p "$(echo -e "  ${CYAN}1/2/3: ${RESET}")" MAX_INSTANCES
         MODE="CUSTOM"
         ;;
-    *) CPU="1"; RAM="2Gi"; MODE="DEFAULT"; MAX_INSTANCES="2";;
+    *) CPU="0.5"; RAM="1Gi"; MODE="LIGHT"; MAX_INSTANCES="2";;
 esac
 
 echo ""
+loading "CHECKING & PREPARING BUILD FILES"
+
+# ✅ DAGDAG: Gumawa ng simpleng Dockerfile at index.html kung wala
+if [ ! -f Dockerfile ]; then
+cat > Dockerfile <<EOF
+FROM debian:bookworm-slim
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt update && apt install -y --no-install-recommends nginx ca-certificates && rm -rf /var/lib/apt/lists/*
+COPY index.html /usr/local/openresty/nginx/html/index.html
+COPY nginx.conf /etc/nginx/nginx.conf
+EXPOSE 8080
+CMD ["nginx", "-g", "daemon off;"]
+EOF
+fi
+
+if [ ! -f index.html ]; then
+    echo -e "  ${YELLOW}⚠️ No index.html found. Using default panel...${RESET}"
+    # Dito pwede ilagay ang panel code natin kanina
+    cat > index.html <<EOF
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAFAELTV PANEL</title>
+    <style>
+        * {margin:0; padding:0; box-sizing:border-box; font-family:Segoe UI, sans-serif;}
+        body {background:#0b0404; color:#fce8e8; padding:2rem;}
+        .container {max-width:700px; margin:0 auto;}
+        .section {background:#180505; border:2px solid #3d0a0a; border-radius:8px; padding:2rem; margin-bottom:1.5rem;}
+        h1 {text-align:center; color:#e62429; margin-bottom:1rem;}
+        .info {background:#0f0303; padding:1rem; border-radius:6px; margin:1rem 0;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="section">
+            <h1>RAFAELTV PANEL</h1>
+            <p style="text-align:center; margin-bottom:1.5rem;">Connected Successfully</p>
+            <div class="info">
+                <strong>HOST:</strong> <span id="host"></span><br>
+                <strong>PORT:</strong> 443<br>
+                <strong>PASSWORD:</strong> rafaeltv
+            </div>
+        </div>
+    </div>
+    <script>document.getElementById('host').textContent = window.location.host;</script>
+</body>
+</html>
+EOF
+fi
+
 loading "BUILDING CONTAINER IMAGE"
 gcloud builds submit --tag "gcr.io/${PROJECT_ID}/${SERVICE_NAME}" --project="$PROJECT_ID" --quiet > build.log 2>&1
 
 if [ $? -ne 0 ]; then 
     echo -e "  ${RED}BUILD FAILED. CHECK LOGS BELOW:${RESET}"
     tail -n 15 build.log
+    rm -f build.log
     exit 1
 fi
 
@@ -123,100 +168,85 @@ gcloud run deploy "$SERVICE_NAME" \
   --image "gcr.io/${PROJECT_ID}/${SERVICE_NAME}" \
   --platform managed --region "$REGION" \
   --cpu "$CPU" --memory "$RAM" --port 8080 \
-  --concurrency 1000 --cpu-boost --no-cpu-throttling \
-  --timeout 3600 --min-instances 0 --max-instances "$MAX_INSTANCES" \
+  --concurrency 800 --timeout 3600 \
+  --min-instances 0 --max-instances "$MAX_INSTANCES" \
   --allow-unauthenticated --project="$PROJECT_ID" --quiet > deploy.log 2>&1
 
 if [ $? -ne 0 ]; then 
     echo -e "  ${RED}DEPLOYMENT FAILED. CHECK LOGS BELOW:${RESET}"
     tail -n 15 deploy.log
+    rm -f build.log deploy.log
     exit 1
 fi
 
 SERVICE_URL=$(gcloud run services describe "$SERVICE_NAME" --region "$REGION" --project="$PROJECT_ID" --format='value(status.url)' 2>/dev/null)
 CLEAN_HOST=$(echo "$SERVICE_URL" | sed 's|https://||')
 
-SS_B64=$(echo -n "aes-256-gcm:rafaeltv" | base64 | tr -d '\n')
-VMESS_WS_JSON='{"v":"2","ps":"VMESS-WS","add":"'"${CLEAN_HOST}"'","port":"443","id":"rafaeltv","aid":"0","net":"ws","path":"/vmess-rafaeltv","host":"'"${CLEAN_HOST}"'","tls":"tls","sni":"'"${CLEAN_HOST}"'","fp":"chrome","alpn":"h2"}'
-VMESS_WS_B64=$(echo -n "$VMESS_WS_JSON" | base64 | tr -d '\n')
+# ✅ INAYOS NA CONFIGS (Tugma sa setup natin)
+SS_B64=$(echo -n "aes-256-gcm:rafaeltv" | base64 -w0)
+VLESS_WS="vless://rafaeltv@${CLEAN_HOST}:443?encryption=none&type=ws&path=/vless-rafaeltv&host=${CLEAN_HOST}&security=tls&sni=${CLEAN_HOST}#VLESS-WS"
+VMESS_WS_JSON='{"v":"2","ps":"VMESS-WS","add":"'"${CLEAN_HOST}"'","port":"443","id":"rafaeltv","aid":"0","scy":"auto","net":"ws","type":"none","host":"'"${CLEAN_HOST}"'","path":"/vmess-rafaeltv","tls":"tls","sni":"'"${CLEAN_HOST}"'","fp":"chrome","alpn":"http/1.1"}'
+VMESS_WS_B64=$(echo -n "$VMESS_WS_JSON" | base64 -w0)
+TROJAN_WS="trojan://rafaeltv@${CLEAN_HOST}:443?type=ws&path=/rafaeltv&host=${CLEAN_HOST}&security=tls&sni=${CLEAN_HOST}#TROJAN-WS"
 
 echo ""
-echo -e "  ${GREEN} (⁠ ⁠ꈍ⁠ᴗ⁠ꈍ⁠) DEPLOYED SUCCESSFULLY${RESET}"
+echo -e "  ${GREEN}✅ DEPLOYED SUCCESSFULLY${RESET}"
 echo ""
-echo -e "  ${CYAN}RAW HOST   ${GREEN}https://${CLEAN_HOST}${RESET}"
-echo -e "  ${CYAN}DASHBOARD  ${GREEN}${SERVICE_URL}${RESET}"
-echo -e "  ${CYAN}PORT       ${GREEN}443${RESET}"
-echo -e "  ${CYAN}PASS       ${GREEN}rafaeltv${RESET}"
-echo -e "  ${CYAN}MODE       ${GREEN}${MODE}${RESET}"
-echo -e "  ${CYAN}CPU        ${GREEN}${CPU}${RESET}"
-echo -e "  ${CYAN}RAM        ${GREEN}${RAM}${RESET}"
+echo -e "  ${CYAN}DASHBOARD: ${GREEN}${SERVICE_URL}${RESET}"
+echo -e "  ${CYAN}HOST:      ${GREEN}${CLEAN_HOST}${RESET}"
+echo -e "  ${CYAN}PORT:      ${GREEN}443${RESET}"
+echo -e "  ${CYAN}PASSWORD:  ${GREEN}rafaeltv${RESET}"
+echo -e "  ${CYAN}MODE:      ${GREEN}${MODE} (${CPU} vCPU / ${RAM})${RESET}"
 echo ""
 
 echo -e "  ${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-echo -e "  ${CYAN}                    PATHS & PROTOCOLS${RESET}"
+echo -e "  ${CYAN}                    ALL PROTOCOLS & PATHS${RESET}"
 echo -e "  ${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 echo ""
-echo -e "  ${CYAN}  PROTOCOL     | WS PATH            | HTTPUPGRADE PATH${RESET}"
-echo -e "  ${YELLOW}  ──────────────────────────────────────────────────────────────${RESET}"
-echo -e "  ${GREEN}  VLESS${RESET}        | ${CYAN}/vless-rafaeltv${RESET}       | ${CYAN}/vless-rafaeltv-hu${RESET}"
-echo -e "  ${GREEN}  VMess${RESET}        | ${CYAN}/vmess-rafaeltv${RESET}       | ${CYAN}/vmess-rafaeltv-hu${RESET}"
-echo -e "  ${GREEN}  TROJAN${RESET}       | ${CYAN}/rafaeltv${RESET}             | ${CYAN}/rafaeltv-hu${RESET}"
-echo -e "  ${GREEN}  Shadowsocks${RESET}  | ${CYAN}/ss-rafaeltv${RESET}          | ${CYAN}/ss-rafaeltv-hu${RESET}"
+echo -e "  ${GREEN}✓ VLESS   ${CYAN}WS: /vless-rafaeltv    ${GREEN}HTTPUPGRADE: /vless-rafaeltv-hu    ${GREEN}XHTTP: /vless-rafaeltv-xh${RESET}"
+echo -e "  ${GREEN}✓ VMESS   ${CYAN}WS: /vmess-rafaeltv    ${GREEN}HTTPUPGRADE: /vmess-rafaeltv-hu    ${GREEN}XHTTP: /vmess-rafaeltv-xh${RESET}"
+echo -e "  ${GREEN}✓ TROJAN  ${CYAN}WS: /rafaeltv          ${GREEN}HTTPUPGRADE: /rafaeltv-hu          ${GREEN}XHTTP: /rafaeltv-xh${RESET}"
+echo -e "  ${GREEN}✓ SHADOWSOCKS ${CYAN}WS: /ss-rafaeltv    ${GREEN}HTTPUPGRADE: /ss-rafaeltv-hu       ${GREEN}XHTTP: /ss-rafaeltv-xh${RESET}"
+echo ""
+echo -e "  ${CYAN}✓ SNI: ${GREEN}${CLEAN_HOST}${RESET}   ${CYAN}✓ ALPN: ${GREEN}http/1.1${RESET}   ${CYAN}✓ FINGERPRINT: ${GREEN}chrome${RESET}"
 echo ""
 echo -e "  ${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-echo -e "  ${CYAN}  HOST: ${GREEN}https://${CLEAN_HOST}${RESET}"
-echo -e "  ${CYAN}  PORT: ${GREEN}443${RESET}"
-echo -e "  ${CYAN}  SNI:  ${GREEN}${CLEAN_HOST}${RESET}"
-echo -e "  ${CYAN}  ALPN: ${GREEN}h2${RESET}"
-echo -e "  ${CYAN}  FP:   ${GREEN}chrome${RESET}"
+echo -e "  ${GREEN}🔗 DIRECT LINKS:${RESET}"
+echo -e "  ${CYAN}VLESS: ${GREEN}${VLESS_WS}${RESET}"
+echo -e "  ${CYAN}TROJAN: ${GREEN}${TROJAN_WS}${RESET}"
+echo -e "  ${CYAN}VMESS: ${GREEN}vmess://${VMESS_WS_B64}${RESET}"
 echo -e "  ${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-echo ""
 
-# ==============================================================================
-# SILENT GITHUB PAGES SYNCHRONIZATION & SELF-CLEANING ROUTINE
-# ==============================================================================
-if [ -s "$HOME/.gh_token" ]; then
-    GH_TOKEN=$(cat "$HOME/.gh_token")
+# ✅ GITHUB SYNC (Mas Ligtas - walang local file)
+if [ -n "$GH_TOKEN" ]; then
     GH_USER="rafaeltv"
     GH_REPO="rafaeltv-gcp-panel"
     
-    rm -rf gh_temp_deploy
-    git clone -q "https://${GH_TOKEN}@github.com/${GH_USER}/${GH_REPO}.git" gh_temp_deploy > /dev/null 2>&1
-    
-    if [ -d "gh_temp_deploy" ]; then
+    if git clone -q "https://${GH_TOKEN}@github.com/${GH_USER}/${GH_REPO}.git" gh_temp_deploy 2>/dev/null; then
         cd gh_temp_deploy
-        touch host.txt
-        touch valid_hosts.txt
-        
-        # Self-cleaning loop: ping existing hosts, purge dead ones (404/000)
+        > temp.txt
         while IFS= read -r line; do
-            if [[ -n "$line" && "$line" == *".run.app"* ]]; then
-                HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}\n" "https://$line" --max-time 3)
-                if [ "$HTTP_STATUS" != "404" ] && [ "$HTTP_STATUS" != "000" ]; then
-                    echo "$line" >> valid_hosts.txt
+            if [[ "$line" == *".run.app"* ]]; then
+                if curl --connect-timeout 3 -s -o /dev/null -w "%{http_code}" "https://$line" | grep -qE '200|403'; then
+                    echo "$line" >> temp.txt
                 fi
             fi
-        done < host.txt
+        done < host.txt 2>/dev/null
         
-        # Append the new active host if it isn't already present
-        if ! grep -q -Fx "$CLEAN_HOST" valid_hosts.txt; then
-            echo "$CLEAN_HOST" >> valid_hosts.txt
-        fi
+        echo "$CLEAN_HOST" >> temp.txt
+        sort -u temp.txt > host.txt
+        rm temp.txt
         
-        mv valid_hosts.txt host.txt
-        
-        git config user.name "Rafaeltv Deployer"
-        git config user.email "deploy@rafaeltv.local"
+        git config --local user.name "Rafaeltv Deployer"
+        git config --local user.email "deploy@rafaeltv.local"
         git add host.txt
-        git commit -m "🚀 Auto-Deploy: Pruned dead routing nodes & appended ${CLEAN_HOST}" > /dev/null 2>&1
-        
-        git push -q origin main > /dev/null 2>&1 || git push -q origin master > /dev/null 2>&1
-        
+        git commit -m "Update hosts: ${CLEAN_HOST}" 2>/dev/null
+        git push -q origin main 2>/dev/null || git push -q origin master 2>/dev/null
         cd ..
         rm -rf gh_temp_deploy
     fi
-    # Local security cleanup
-    rm -f "$HOME/.gh_token"
 fi
 
+# ✅ CLEANUP
 rm -f build.log deploy.log
+echo -e "\n  ${GREEN}✅ SCRIPT FINISHED CLEANLY${RESET}"
