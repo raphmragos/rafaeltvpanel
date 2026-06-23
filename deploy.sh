@@ -64,7 +64,7 @@ else
 fi
 
 if [ -z "$GH_TOKEN" ] || ! echo "$GH_TOKEN" | grep -q "^gh[pousr]_"; then
-    echo -e "  ${RED}INVALID GITHUB TOKEN. SKIPPING GITHUB SYNC.${RESET}"
+    echo -e "  ${YELLOW}INVALID GITHUB TOKEN. SKIPPING GITHUB SYNC.${RESET}"
     GH_TOKEN=""
 fi
 # ==============================================================================
@@ -99,39 +99,207 @@ case "$MODE_CHOICE" in
 esac
 
 echo ""
-loading "CHECKING & PREPARING BUILD FILES"
+loading "CREATING REQUIRED CONFIG FILES"
 
-# ✅ DAGDAG: Gumawa ng tamang Dockerfile na may Xray at Nginx
-if [ ! -f Dockerfile ]; then
-cat > Dockerfile <<EOF
-FROM openresty/openresty:alpine
-RUN apk add --no-cache ca-certificates wget unzip tini
-
-RUN wget -qO /tmp/xray.zip https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip && \
-    unzip /tmp/xray.zip -d /tmp/xray/ && \
-    mv /tmp/xray/xray /usr/local/bin/ && \
-    mkdir -p /usr/local/share/xray/ && \
-    mv /tmp/xray/geoip.dat /usr/local/share/xray/ && \
-    mv /tmp/xray/geosite.dat /usr/local/share/xray/ && \
-    chmod +x /usr/local/bin/xray && \
-    rm -rf /tmp/xray /tmp/xray.zip
-
-COPY config.json /etc/xray.json
-COPY nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
-COPY index.html /usr/local/openresty/nginx/html/index.html
-
-ENV XRAY_LOCATION_ASSET=/usr/local/share/xray/
-
-EXPOSE 8080
-
-ENTRYPOINT ["/sbin/tini", "--"]
-CMD sh -c "/usr/local/bin/xray run -c /etc/xray.json & exec /usr/local/openresty/bin/openresty -g 'daemon off;'"
+# ✅ CREATE config.json (your corrected version)
+cat > config.json <<'EOF'
+{
+  "log": {
+    "loglevel": "warning"
+  },
+  "dns": {
+    "servers": ["8.8.8.8", "8.8.4.4", "1.1.1.1", "1.0.0.1"],
+    "queryStrategy": "UseIPv4",
+    "disableCache": false,
+    "hosts": {
+      "pagead2.googlesyndication.com": "127.0.0.1",
+      "googlesyndication.com": "127.0.0.1",
+      "doubleclick.net": "127.0.0.1",
+      "googleadservices.com": "127.0.0.1",
+      "adservice.google.com": "127.0.0.1",
+      "adsbygoogle.com": "127.0.0.1",
+      "google-analytics.com": "127.0.0.1",
+      "googletagmanager.com": "127.0.0.1",
+      "googletagservices.com": "127.0.0.1",
+      "googleads.g.doubleclick.net": "127.0.0.1",
+      "securepubads.g.doubleclick.net": "127.0.0.1",
+      "tpc.googlesyndication.com": "127.0.0.1",
+      "afs.googlesyndication.com": "127.0.0.1",
+      "stats.g.doubleclick.net": "127.0.0.1",
+      "ad.doubleclick.net": "127.0.0.1",
+      "partner.googleadservices.com": "127.0.0.1",
+      "pagead2.googleadservices.com": "127.0.0.1",
+      "popads.net": "127.0.0.1",
+      "popcash.net": "127.0.0.1",
+      "propellerads.com": "127.0.0.1",
+      "adcash.com": "127.0.0.1",
+      "exoclick.com": "127.0.0.1",
+      "adsterra.com": "127.0.0.1",
+      "popmyads.com": "127.0.0.1",
+      "adultforce.com": "127.0.0.1",
+      "trafficjunky.com": "127.0.0.1",
+      "clickaine.com": "127.0.0.1",
+      "ad-maven.com": "127.0.0.1",
+      "adpushup.com": "127.0.0.1",
+      "adrecover.com": "127.0.0.1",
+      "blockadblock.com": "127.0.0.1",
+      "admiral.com": "127.0.0.1",
+      "fundingchoices.google.com": "127.0.0.1"
+    }
+  },
+  "inbounds": [
+    {
+      "port": 10000,
+      "listen": "127.0.0.1",
+      "protocol": "trojan",
+      "tag": "trojan-ws",
+      "settings": {"clients": [{"password": "rafaeltv"}]},
+      "streamSettings": {"network": "ws", "security": "none", "wsSettings": {"path": "/rafaeltv"}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10001,
+      "listen": "127.0.0.1",
+      "protocol": "trojan",
+      "tag": "trojan-hu",
+      "settings": {"clients": [{"password": "rafaeltv"}]},
+      "streamSettings": {"network": "httpupgrade", "security": "none", "httpupgradeSettings": {"path": "/rafaeltv-hu"}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10002,
+      "listen": "127.0.0.1",
+      "protocol": "trojan",
+      "tag": "trojan-xh",
+      "settings": {"clients": [{"password": "rafaeltv"}]},
+      "streamSettings": {"network": "xhttp", "security": "none", "xhttpSettings": {"path": "/rafaeltv-xh", "mode": "auto"}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10003,
+      "listen": "127.0.0.1",
+      "protocol": "vmess",
+      "tag": "vmess-ws",
+      "settings": {"clients": [{"id": "b831381d-6324-4d53-ad4f-8cda48b30811", "alterId": 0, "email": "user@local"}]},
+      "streamSettings": {"network": "ws", "security": "none", "wsSettings": {"path": "/vmess-rafaeltv"}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10004,
+      "listen": "127.0.0.1",
+      "protocol": "vmess",
+      "tag": "vmess-hu",
+      "settings": {"clients": [{"id": "b831381d-6324-4d53-ad4f-8cda48b30811", "alterId": 0, "email": "user@local"}]},
+      "streamSettings": {"network": "httpupgrade", "security": "none", "httpupgradeSettings": {"path": "/vmess-rafaeltv-hu"}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10005,
+      "listen": "127.0.0.1",
+      "protocol": "vmess",
+      "tag": "vmess-xh",
+      "settings": {"clients": [{"id": "b831381d-6324-4d53-ad4f-8cda48b30811", "alterId": 0, "email": "user@local"}]},
+      "streamSettings": {"network": "xhttp", "security": "none", "xhttpSettings": {"path": "/vmess-rafaeltv-xh", "mode": "auto"}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10006,
+      "listen": "127.0.0.1",
+      "protocol": "vless",
+      "tag": "vless-ws",
+      "settings": {"clients": [{"id": "rafaeltv", "email": "user@local"}], "decryption": "none"},
+      "streamSettings": {"network": "ws", "security": "none", "wsSettings": {"path": "/vless-rafaeltv"}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10007,
+      "listen": "127.0.0.1",
+      "protocol": "vless",
+      "tag": "vless-hu",
+      "settings": {"clients": [{"id": "rafaeltv", "email": "user@local"}], "decryption": "none"},
+      "streamSettings": {"network": "httpupgrade", "security": "none", "httpupgradeSettings": {"path": "/vless-rafaeltv-hu"}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10008,
+      "listen": "127.0.0.1",
+      "protocol": "vless",
+      "tag": "vless-xh",
+      "settings": {"clients": [{"id": "rafaeltv", "email": "user@local"}], "decryption": "none"},
+      "streamSettings": {"network": "xhttp", "security": "none", "xhttpSettings": {"path": "/vless-rafaeltv-xh", "mode": "auto"}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10009,
+      "listen": "127.0.0.1",
+      "protocol": "shadowsocks",
+      "tag": "ss-ws",
+      "settings": {"clients": [{"password": "rafaeltv", "method": "aes-256-gcm"}]},
+      "streamSettings": {"network": "ws", "security": "none", "wsSettings": {"path": "/ss-rafaeltv"}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10010,
+      "listen": "127.0.0.1",
+      "protocol": "shadowsocks",
+      "tag": "ss-hu",
+      "settings": {"clients": [{"password": "rafaeltv", "method": "aes-256-gcm"}]},
+      "streamSettings": {"network": "httpupgrade", "security": "none", "httpupgradeSettings": {"path": "/ss-rafaeltv-hu"}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10011,
+      "listen": "127.0.0.1",
+      "protocol": "shadowsocks",
+      "tag": "ss-xh",
+      "settings": {"clients": [{"password": "rafaeltv", "method": "aes-256-gcm"}]},
+      "streamSettings": {"network": "xhttp", "security": "none", "xhttpSettings": {"path": "/ss-rafaeltv-xh", "mode": "auto"}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    }
+  ],
+  "outbounds": [{"protocol": "freedom", "tag": "direct"}, {"protocol": "blackhole", "tag": "block"}],
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+    "rules": [
+      {"type": "field", "domain": ["geosite:category-ads-all"], "outboundTag": "block"},
+      {"type": "field", "inboundTag": ["trojan-ws","trojan-hu","trojan-xh","vmess-ws","vmess-hu","vmess-xh","vless-ws","vless-hu","vless-xh","ss-ws","ss-hu","ss-xh"], "outboundTag": "direct"}
+    ]
+  }
+}
 EOF
-fi
 
+# ✅ CREATE nginx.conf to forward traffic to Xray
+cat > nginx.conf <<'EOF'
+worker_processes 1;
+error_log /dev/stdout info;
+events { worker_connections 1024; }
+http {
+    access_log /dev/stdout;
+    server {
+        listen 8080;
+        server_name _;
+
+        location /rafaeltv { proxy_pass http://127.0.0.1:10000; proxy_http_version 1.1; proxy_set_header Upgrade $http_upgrade; proxy_set_header Connection "upgrade"; proxy_set_header Host $host; }
+        location /rafaeltv-hu { proxy_pass http://127.0.0.1:10001; proxy_http_version 1.1; proxy_set_header Host $host; }
+        location /rafaeltv-xh { proxy_pass http://127.0.0.1:10002; proxy_http_version 1.1; proxy_set_header Host $host; }
+        location /vmess-rafaeltv { proxy_pass http://127.0.0.1:10003; proxy_http_version 1.1; proxy_set_header Upgrade $http_upgrade; proxy_set_header Connection "upgrade"; proxy_set_header Host $host; }
+        location /vmess-rafaeltv-hu { proxy_pass http://127.0.0.1:10004; proxy_http_version 1.1; proxy_set_header Host $host; }
+        location /vmess-rafaeltv-xh { proxy_pass http://127.0.0.1:10005; proxy_http_version 1.1; proxy_set_header Host $host; }
+        location /vless-rafaeltv { proxy_pass http://127.0.0.1:10006; proxy_http_version 1.1; proxy_set_header Upgrade $http_upgrade; proxy_set_header Connection "upgrade"; proxy_set_header Host $host; }
+        location /vless-rafaeltv-hu { proxy_pass http://127.0.0.1:10007; proxy_http_version 1.1; proxy_set_header Host $host; }
+        location /vless-rafaeltv-xh { proxy_pass http://127.0.0.1:10008; proxy_http_version 1.1; proxy_set_header Host $host; }
+        location /ss-rafaeltv { proxy_pass http://127.0.0.1:10009; proxy_http_version 1.1; proxy_set_header Upgrade $http_upgrade; proxy_set_header Connection "upgrade"; proxy_set_header Host $host; }
+        location /ss-rafaeltv-hu { proxy_pass http://127.0.0.1:10010; proxy_http_version 1.1; proxy_set_header Host $host; }
+        location /ss-rafaeltv-xh { proxy_pass http://127.0.0.1:10011; proxy_http_version 1.1; proxy_set_header Host $host; }
+
+        location / { root /usr/local/openresty/nginx/html; index index.html; }
+    }
+}
+EOF
+
+# ✅ CREATE index.html if missing
 if [ ! -f index.html ]; then
-    echo -e "  ${YELLOW}⚠️ No index.html found. Using default panel...${RESET}"
-    cat > index.html <<EOF
+    cat > index.html <<'EOF'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -165,6 +333,32 @@ if [ ! -f index.html ]; then
 EOF
 fi
 
+# ✅ CREATE Dockerfile
+cat > Dockerfile <<'EOF'
+FROM openresty/openresty:alpine
+RUN apk add --no-cache ca-certificates wget unzip tini
+
+RUN wget -qO /tmp/xray.zip https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip && \
+    unzip /tmp/xray.zip -d /tmp/xray/ && \
+    mv /tmp/xray/xray /usr/local/bin/ && \
+    mkdir -p /usr/local/share/xray/ && \
+    mv /tmp/xray/geoip.dat /usr/local/share/xray/ && \
+    mv /tmp/xray/geosite.dat /usr/local/share/xray/ && \
+    chmod +x /usr/local/bin/xray && \
+    rm -rf /tmp/xray /tmp/xray.zip
+
+COPY config.json /etc/xray.json
+COPY nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
+COPY index.html /usr/local/openresty/nginx/html/index.html
+
+ENV XRAY_LOCATION_ASSET=/usr/local/share/xray/
+
+EXPOSE 8080
+
+ENTRYPOINT ["/sbin/tini", "--"]
+CMD sh -c "/usr/local/bin/xray run -c /etc/xray.json & exec /usr/local/openresty/bin/openresty -g 'daemon off;'"
+EOF
+
 loading "BUILDING CONTAINER IMAGE"
 gcloud builds submit --tag "gcr.io/${PROJECT_ID}/${SERVICE_NAME}" --project="$PROJECT_ID" --quiet > build.log 2>&1
 
@@ -194,10 +388,11 @@ fi
 SERVICE_URL=$(gcloud run services describe "$SERVICE_NAME" --region "$REGION" --project="$PROJECT_ID" --format='value(status.url)' 2>/dev/null)
 CLEAN_HOST=$(echo "$SERVICE_URL" | sed 's|https://||')
 
-# ✅ INAYOS NA CONFIGS (Tugma sa setup natin)
+# ✅ FIXED CONNECTION LINKS (matching correct VMess UUID)
+VMESS_UUID="b831381d-6324-4d53-ad4f-8cda48b30811"
 SS_B64=$(echo -n "aes-256-gcm:rafaeltv" | base64 -w0)
 VLESS_WS="vless://rafaeltv@${CLEAN_HOST}:443?encryption=none&type=ws&path=/vless-rafaeltv&host=${CLEAN_HOST}&security=tls&sni=${CLEAN_HOST}#VLESS-WS"
-VMESS_WS_JSON='{"v":"2","ps":"VMESS-WS","add":"'"${CLEAN_HOST}"'","port":"443","id":"rafaeltv","aid":"0","scy":"auto","net":"ws","type":"none","host":"'"${CLEAN_HOST}"'","path":"/vmess-rafaeltv","tls":"tls","sni":"'"${CLEAN_HOST}"'","fp":"chrome","alpn":"http/1.1"}'
+VMESS_WS_JSON='{"v":"2","ps":"VMESS-WS","add":"'"${CLEAN_HOST}"'","port":"443","id":"'"${VMESS_UUID}"'","aid":"0","scy":"auto","net":"ws","type":"none","host":"'"${CLEAN_HOST}"'","path":"/vmess-rafaeltv","tls":"tls","sni":"'"${CLEAN_HOST}"'","fp":"chrome","alpn":"http/1.1"}'
 VMESS_WS_B64=$(echo -n "$VMESS_WS_JSON" | base64 -w0)
 TROJAN_WS="trojan://rafaeltv@${CLEAN_HOST}:443?type=ws&path=/rafaeltv&host=${CLEAN_HOST}&security=tls&sni=${CLEAN_HOST}#TROJAN-WS"
 
