@@ -1,6 +1,7 @@
 FROM openresty/openresty:alpine
 RUN apk add --no-cache ca-certificates wget unzip tini
 
+# I-install ang Xray kasama ang mga kailangang database
 RUN wget -qO /tmp/xray.zip https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip && \
     unzip /tmp/xray.zip -d /tmp/xray/ && \
     mv /tmp/xray/xray /usr/local/bin/ && \
@@ -10,13 +11,13 @@ RUN wget -qO /tmp/xray.zip https://github.com/XTLS/Xray-core/releases/latest/dow
     chmod +x /usr/local/bin/xray && \
     rm -rf /tmp/xray /tmp/xray.zip
 
+# Kopyahin ang config files
 COPY config.json /etc/xray.json
 COPY nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
 COPY index.html /usr/local/openresty/nginx/html/index.html
 
 ENV XRAY_LOCATION_ASSET=/usr/local/share/xray/
-
 EXPOSE 8080
 
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD sh -c "/usr/local/bin/xray run -c /etc/xray.json & exec /usr/local/openresty/bin/openresty -g 'daemon off;'"
+CMD sh -c "xray run -c /etc/xray.json & openresty -g 'daemon off;'"
