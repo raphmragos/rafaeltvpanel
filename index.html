@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RAFAEL TV PANEL - Akatsuki Theme</title>
+    <title>RAFAEL TV PANEL - Akatsuki Clan</title>
     <style>
         :root {
             --bg-main: #0b0404;
             --bg-dark: #120404;
-            --surface: #180505;
-            --surface-dark: #0f0303;
+            --surface: rgba(24, 5, 5, 0.88);
+            --surface-dark: rgba(15, 3, 3, 0.92);
             --border: #3d0a0a;
-            --border-bright: #e62429;
-            --text: #fce8e8;
-            --text-dim: #b87070;
-            --accent: #e62429;
-            --glow: #ff3333;
+            --border-bright: #9932cc; /* Pinalitan ng purple para tugma sa image */
+            --text: #f0e6ff;
+            --text-dim: #c4a4e8;
+            --accent: #9932cc; /* Purple accent */
+            --glow: #b866ff;
             --red: #ff2a33;
             --yellow: #ffcc00;
             --blue: #4194ff;
@@ -36,7 +36,9 @@
         }
 
         body {
-            background: linear-gradient(180deg, #050202 0%, #120404 100%);
+            /* Inilagay na background image */
+            background: linear-gradient(rgba(5, 2, 2, 0.75), rgba(18, 4, 4, 0.85)), 
+                        url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Sasuke_Uchiha_2.png/1200px-Sasuke_Uchiha_2.png') center/cover no-repeat fixed;
             color: var(--text);
             font-family: var(--font-sans);
             font-size: var(--font-size-base);
@@ -53,12 +55,7 @@
         }
 
         body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(5, 2, 2, 0.9);
-            z-index: -1;
+            display: none; /* Tinanggal yung lumang overlay para makita yung image */
         }
 
         .container {
@@ -76,8 +73,8 @@
         }
 
         @keyframes textGlow {
-            0%, 100% { text-shadow: 0 0 12px var(--glow), 0 0 24px rgba(230, 36, 41, 0.7); }
-            50% { text-shadow: 0 0 6px var(--glow), 0 0 14px rgba(230, 36, 41, 0.4); }
+            0%, 100% { text-shadow: 0 0 12px var(--glow), 0 0 24px rgba(153, 50, 204, 0.7); }
+            50% { text-shadow: 0 0 6px var(--glow), 0 0 14px rgba(153, 50, 204, 0.4); }
         }
 
         .fade-in { animation: fadeInUp 0.6s ease-out forwards; }
@@ -93,7 +90,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: rgba(5, 2, 2, 0.97);
+            background: rgba(5, 2, 2, 0.92);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             z-index: 9999;
@@ -136,18 +133,19 @@
 
         /* --- BOX STYLING --- */
         .section {
-            background: linear-gradient(160deg, #140404, #1a0606);
+            background: linear-gradient(160deg, rgba(20, 4, 30, 0.88), rgba(26, 6, 40, 0.9));
             border: 2px solid var(--border);
             border-radius: 8px;
             padding: 24px 20px;
             width: 100%;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 60, 60, 0.08);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(180, 100, 255, 0.1);
+            backdrop-filter: blur(8px);
         }
 
         .section:hover {
             border-color: var(--border-bright);
-            box-shadow: 0 0 18px rgba(230, 36, 41, 0.4), 0 6px 16px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 18px rgba(153, 50, 204, 0.5), 0 6px 16px rgba(0, 0, 0, 0.8);
             transform: translateY(-2px);
         }
 
@@ -194,17 +192,18 @@
             justify-content: space-between;
             align-items: center;
             min-height: 54px;
+            backdrop-filter: blur(4px);
         }
 
         .btn:hover {
             border-color: var(--accent);
-            background: rgba(230, 36, 41, 0.15);
+            background: rgba(153, 50, 204, 0.18);
         }
 
         .btn.active {
             border-color: var(--accent);
-            background: rgba(230, 36, 41, 0.25);
-            box-shadow: 0 0 14px rgba(230, 36, 41, 0.4);
+            background: rgba(153, 50, 204, 0.3);
+            box-shadow: 0 0 14px rgba(184, 102, 255, 0.45);
             font-weight: 600;
             color: #ffffff;
         }
@@ -218,6 +217,7 @@
             border-radius: 6px;
             background: var(--surface-dark);
             border: 1px solid var(--border);
+            backdrop-filter: blur(4px);
         }
 
         .speed-row {
@@ -235,6 +235,7 @@
             border-radius: 6px;
             background: var(--surface-dark);
             border: 1px solid var(--border);
+            backdrop-filter: blur(4px);
         }
 
         .speed-label {
@@ -264,11 +265,12 @@
             background: var(--surface-dark);
             border-radius: 6px;
             border: 1px solid var(--border);
+            backdrop-filter: blur(4px);
         }
 
         .graph-bar {
             flex: 1;
-            background: linear-gradient(to top, var(--accent), #ff6666);
+            background: linear-gradient(to top, var(--purple), #d099ff);
             border-radius: 2px;
             transition: height 0.12s ease;
             min-height: 3px;
@@ -290,10 +292,11 @@
             line-height: 1.7;
             word-break: break-all;
             white-space: pre-wrap;
-            color: var(--green);
+            color: #99ffaa;
             min-height: 120px;
             max-height: 320px;
             overflow-y: auto;
+            backdrop-filter: blur(4px);
         }
 
         .copy-btn {
@@ -311,11 +314,12 @@
             font-weight: 500;
             z-index: 5;
             transition: all 0.2s ease;
+            backdrop-filter: blur(4px);
         }
 
         .copy-btn:hover {
             border-color: var(--accent);
-            background: rgba(230, 36, 41, 0.25);
+            background: rgba(153, 50, 204, 0.3);
         }
 
         .status-dot {
@@ -330,7 +334,7 @@
         .status-dot.yellow { background: var(--yellow); box-shadow: 0 0 8px var(--yellow); animation: pulse 1.2s infinite; }
         @keyframes pulse { 0%,100% {opacity:1;} 50% {opacity:0.5;} }
 
-        .divider { border: none; border-top: 1px solid rgba(92, 18, 18, 0.8); margin: 16px 0; }
+        .divider { border: none; border-top: 1px solid rgba(92, 18, 138, 0.8); margin: 16px 0; }
         .info-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; font-size: var(--font-size-sm); }
         .info-label { color: var(--text-dim); }
         .info-value { color: var(--accent); font-weight: 600; font-size: 15px; }
@@ -348,7 +352,7 @@
             overflow-y: auto;
             width: calc(100% - 32px);
             max-width: 688px;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.7);
             backdrop-filter: blur(15px);
         }
         .dropdown-content.show { display: block; }
@@ -360,8 +364,8 @@
             transition: background 0.2s; 
             line-height: 1.5;
         }
-        .dropdown-item:hover { background: rgba(230, 36, 41, 0.2); }
-        .dropdown-item.selected { color: var(--accent); font-weight: bold; background: rgba(230, 36, 41, 0.15); }
+        .dropdown-item:hover { background: rgba(153, 50, 204, 0.25); }
+        .dropdown-item.selected { color: var(--accent); font-weight: bold; background: rgba(153, 50, 204, 0.2); }
 
         .log-container {
             background: var(--surface-dark);
@@ -373,24 +377,25 @@
             font-size: var(--font-size-sm);
             color: var(--text-dim);
             margin-top: 16px;
+            backdrop-filter: blur(4px);
         }
         .log-entry { padding: 4px 0; font-family: var(--font-mono); }
-        .log-entry .time { color: #b87070; margin-right: 8px; }
+        .log-entry .time { color: #c4a4e8; margin-right: 8px; }
     </style>
 </head>
 <body>
 
 <div id="loading-screen">
     <div class="loading-digits" id="loading-digits">
-        <span id="d4">☁</span><span id="d0">A</span><span id="d4b">☁</span>
+        <span id="d4">⚡</span><span id="d0">S</span><span id="d4b">⚡</span>
     </div>
-    <div class="loading-subtitle" id="loading-subtitle">AKATSUKI PORTAL • INITIALIZING</div>
+    <div class="loading-subtitle" id="loading-subtitle">SUSANOO MODE • INITIALIZING</div>
 </div>
 
 <div class="container" id="main-content" style="display:none;">
     <div class="section fade-in">
         <div class="section-title glow-text" style="font-size:var(--font-size-xl); letter-spacing:4px; color:var(--accent);">RAFAELTV PANEL</div>
-        <div class="section-subtitle">AKATSUKI EDITION • LIBRENG INTERNET</div>
+        <div class="section-subtitle">Sasuke Edition • Libreng Internet</div>
         <hr class="divider">
         <div class="info-row"><span class="info-label">HOST:</span><span class="info-value" id="info-host">---</span></div>
         <div class="info-row"><span class="info-label">VMess UUID:</span><span class="info-value">b831381d-6324-4d53-ad4f-8cda48b30811</span></div>
@@ -440,7 +445,7 @@
         </div>
         <div class="graph-container" id="graph-container"></div>
         <div class="log-container" id="log-container">
-            <div class="log-entry"><span class="time">--:--:--</span> Akatsuki network connected successfully.</div>
+            <div class="log-entry"><span class="time">--:--:--</span> Susanoo connection activated.</div>
         </div>
     </div>
 
@@ -589,7 +594,7 @@
         setTimeout(() => {
             loadingScreen.classList.add('hidden');
             mainContent.style.display = 'flex';
-            addLog('Akatsuki system ready.');
+            addLog('Susanoo system ready.');
         }, 1800);
 
         setInterval(simulateSpeedStream, 500);
