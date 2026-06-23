@@ -4,13 +4,16 @@ FROM openresty/openresty:alpine
 RUN apk add --no-cache ca-certificates wget unzip tini
 
 # I-download at i-install ang Xray kasama ang mga database
-RUN wget -qO /tmp/xray.zip https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip && \
-    unzip /tmp/xray.zip -d /tmp/xray/ && \
+RUN wget --timeout=30 -qO /tmp/xray.zip https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip && \
+    unzip -q /tmp/xray.zip -d /tmp/xray/ && \
     mv /tmp/xray/xray /usr/local/bin/ && \
     mkdir -p /usr/local/share/xray/ && \
     mv /tmp/xray/geoip.dat /usr/local/share/xray/ && \
     mv /tmp/xray/geosite.dat /usr/local/share/xray/ && \
     chmod +x /usr/local/bin/xray && \
+    # I-check kung gumagana ang Xray
+    xray --version && \
+    # Linisin ang mga hindi kailangan
     rm -rf /tmp/xray /tmp/xray.zip
 
 # Kopyahin ang mga config
@@ -23,4 +26,4 @@ EXPOSE 8080
 
 # Gamitin ang tini para pamahalaan nang tama ang dalawang serbisyo
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD sh -c "set -e; xray run -c /etc/xray.json & exec openresty -g 'daemon off;'"
+CMD sh -c "xray run -c /etc/xray.json & exec openresty -g 'daemon off;'"
